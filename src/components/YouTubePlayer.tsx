@@ -30,7 +30,7 @@ export default function YouTubePlayer({ videoId }: YouTubePlayerProps) {
 
     window.onYouTubeIframeAPIReady = () => {
       if (playerRef.current) {
-        const ytPlayer = new window.YT.Player(playerRef.current, {
+        new window.YT.Player(playerRef.current, {
           videoId: videoId,
           playerVars: {
             autoplay: 1,
