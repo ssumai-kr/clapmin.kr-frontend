@@ -6,7 +6,7 @@ interface SpotifyPlayerProps {
 }
 
 export default function SpotifyPlayer({ token }: SpotifyPlayerProps) {
-  const [volume, setVolumeState] = useState(50);
+  const [volume] = useState(50);
   const playlistUri = import.meta.env.VITE_SPOTIFY_PLAYLIST_URI || '';
 
   const {

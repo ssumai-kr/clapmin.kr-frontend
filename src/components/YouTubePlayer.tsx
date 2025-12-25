@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 declare global {
   interface Window {
-    YT: typeof YT;
+    YT: any;
     onYouTubeIframeAPIReady: () => void;
   }
 }
@@ -13,7 +13,7 @@ interface YouTubePlayerProps {
 
 export default function YouTubePlayer({ videoId }: YouTubePlayerProps) {
   const playerRef = useRef<HTMLDivElement>(null);
-  const [player, setPlayer] = useState<YT.Player | null>(null);
+  const [player, setPlayer] = useState<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -28,7 +28,7 @@ export default function YouTubePlayer({ videoId }: YouTubePlayerProps) {
 
     window.onYouTubeIframeAPIReady = () => {
       if (playerRef.current) {
-        const ytPlayer = new window.YT.Player(playerRef.current, {
+        new window.YT.Player(playerRef.current, {
           videoId: videoId,
           playerVars: {
             autoplay: 1,
@@ -39,13 +39,13 @@ export default function YouTubePlayer({ videoId }: YouTubePlayerProps) {
             playlist: videoId,
           },
           events: {
-            onReady: (event) => {
+            onReady: (event: any) => {
               setPlayer(event.target);
               setDuration(event.target.getDuration());
               setVideoTitle(event.target.getVideoData().title);
               event.target.playVideo();
             },
-            onStateChange: (event) => {
+            onStateChange: (event: any) => {
               if (event.data === window.YT.PlayerState.PLAYING) {
                 setIsPlaying(true);
               } else if (event.data === window.YT.PlayerState.ENDED) {
