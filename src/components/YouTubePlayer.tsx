@@ -115,7 +115,11 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
     return () => clearInterval(interval);
   }, [player, duration]);
 
-  const togglePlay = () => {
+  const togglePlay = (e?: React.MouseEvent | React.TouchEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (!player) return;
 
     if (isPlaying) {
@@ -125,7 +129,11 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
     }
   };
 
-  const toggleMute = () => {
+  const toggleMute = (e?: React.MouseEvent | React.TouchEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (!player) return;
 
     if (isMuted) {
@@ -157,11 +165,15 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('button')) return; // 버튼 클릭 시 드래그 방지
     setIsDragging(true);
     setStartX(e.clientX);
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('button')) return; // 버튼 터치 시 드래그 방지
     setIsDragging(true);
     setStartX(e.touches[0].clientX);
   };
@@ -244,10 +256,17 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
                   <>
                     {/* 재생 버튼 오버레이 */}
                     <button
-                      onClick={togglePlay}
+                      onClick={(e) => togglePlay(e)}
+                      onTouchEnd={(e) => {
+                        e.preventDefault();
+                        togglePlay(e);
+                      }}
                       className="absolute inset-0 flex items-center justify-center group"
                       aria-label={isPlaying ? '일시정지' : '재생'}
-                      style={{ WebkitTapHighlightColor: 'transparent' }}
+                      style={{
+                        WebkitTapHighlightColor: 'transparent',
+                        touchAction: 'manipulation'
+                      }}
                     >
                       <div className="backdrop-blur-sm p-4 rounded-full transition-all transform group-hover:scale-110 group-active:scale-95" style={{ backgroundColor: 'rgba(30, 215, 96, 0.9)' }}>
                         {isPlaying ? (
@@ -265,9 +284,14 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
                     {/* 음량 조절 */}
                     <div className="absolute top-4 right-4 flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-lg px-3 py-2">
                       <button
-                        onClick={toggleMute}
+                        onClick={(e) => toggleMute(e)}
+                        onTouchEnd={(e) => {
+                          e.preventDefault();
+                          toggleMute(e);
+                        }}
                         className="text-white hover:text-gray-300 transition-colors"
                         aria-label={isMuted ? '음소거 해제' : '음소거'}
+                        style={{ touchAction: 'manipulation' }}
                       >
                         {isMuted || volume === 0 ? (
                           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
