@@ -371,6 +371,13 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
           />
         ))}
       </div>
+
+      {/* 브라우저 권장 메시지 */}
+      <div className="text-center mt-4">
+        <p className="text-xs text-gray-600">
+          Best experience with Chrome or Safari browser
+        </p>
+      </div>
     </div>
   );
 }
