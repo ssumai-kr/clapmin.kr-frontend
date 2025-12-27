@@ -5,7 +5,11 @@ import itsSupportCard from './images/itssupportcard.png';
 import sapLogo from './images/sap.png';
 
 function App() {
-  const youtubeVideoId = import.meta.env.VITE_YOUTUBE_VIDEO_ID || 'QwByM5-vwlM';
+  const youtubeVideoIds = [
+    'QwByM5-vwlM',
+    'bH6ZvLhUx5o',
+    'P18g4rKns6Q'
+  ];
 
   return (
     <div className='flex flex-col items-center justify-between min-h-screen bg-slate-300 py-8 px-4'>
@@ -25,7 +29,7 @@ function App() {
           />
         </div>
         <TextType
-          text={['Welcome! This site is currently under development.','In the meantime, enjoy some music! 🎵']}
+          text={['Welcome My SPACE! This site is currently under development.','In the meantime, enjoy some music! 🎵']}
           typingSpeed={120}
           pauseDuration={1500}
           showCursor={true}
@@ -34,7 +38,7 @@ function App() {
         />
 
         <div className="mt-1 w-full">
-          <YouTubePlayer videoId={youtubeVideoId} />
+          <YouTubePlayer videoIds={youtubeVideoIds} />
         </div>
 
         <div className="mt-8 w-full max-w-sm mx-auto bg-white/50 backdrop-blur-sm rounded-lg p-4 border border-gray-300/50">
