@@ -1,20 +1,21 @@
-import TextPressure from './components/TextPressure';
-import TextType from './components/TextType';
-import YouTubePlayer from './components/YouTubePlayer';
-import itsSupportCard from './images/itssupportcard.png';
-import sapLogo from './images/sap.png';
+import TextPressure from "./components/TextPressure";
+import TextType from "./components/TextType";
+import YouTubePlayer from "./components/YouTubePlayer";
+import itsSupportCard from "./images/itssupportcard.png";
+import sapLogo from "./images/sap.png";
 
 function App() {
   const youtubeVideoIds = [
-    'QwByM5-vwlM',
-    'bH6ZvLhUx5o',
-    'P18g4rKns6Q'
+    "JKCneM3C8R8",
+    "QwByM5-vwlM",
+    "bH6ZvLhUx5o",
+    "P18g4rKns6Q",
   ];
 
   return (
-    <div className='flex flex-col items-center justify-between min-h-screen bg-slate-300 py-8 px-4'>
-      <div className='flex flex-col items-center justify-start flex-1 w-full'>
-        <div style={{ position: 'relative', height: '100px' }}>
+    <div className="flex flex-col items-center justify-between min-h-screen bg-slate-300 py-8 px-4">
+      <div className="flex flex-col items-center justify-start flex-1 w-full">
+        <div style={{ position: "relative", height: "100px" }}>
           <TextPressure
             text="CLAP MIN!"
             flex={true}
@@ -29,12 +30,15 @@ function App() {
           />
         </div>
         <TextType
-          text={['Welcome My SPACE! This site is currently under development.','In the meantime, enjoy some music! 🎵']}
+          text={[
+            "Welcome My SPACE! This site is currently under development.",
+            "In the meantime, enjoy some music! 🎵",
+          ]}
           typingSpeed={120}
           pauseDuration={1500}
           showCursor={true}
           cursorCharacter="|"
-          className='text-2xl font-extrabold px-4 mb-8 h-[100px] mt-[20px]'
+          className="text-2xl font-extrabold px-4 mb-8 h-[100px] mt-[20px]"
         />
 
         <div className="mt-1 w-full">
@@ -50,18 +54,7 @@ function App() {
             </p>
             <div className="pt-2 space-y-1 text-xs text-gray-700">
               <p>
-                <span className="font-medium">GitHub:</span>{' '}
-                <a
-                  href="https://github.com/ssumai-kr"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-gray-900 transition-colors underline"
-                >
-                  github.com/ssumai-kr
-                </a>
-              </p>
-              <p>
-                <span className="font-medium">Contact:</span>{' '}
+                <span className="font-medium">Contact:</span>{" "}
                 <a
                   href="mailto:fhsjdvs@gmail.com"
                   className="hover:text-gray-900 transition-colors underline"
@@ -88,7 +81,13 @@ function App() {
             © 2025 clapmin. All rights reserved.
           </p>
           <p className="text-xs text-gray-600">
-            Contact: <a href="mailto:fhsjdvs@gmail.com" className="hover:text-gray-900 transition-colors underline">fhsjdvs@gmail.com</a>
+            Contact:{" "}
+            <a
+              href="mailto:fhsjdvs@gmail.com"
+              className="hover:text-gray-900 transition-colors underline"
+            >
+              fhsjdvs@gmail.com
+            </a>
           </p>
         </div>
       </footer>
