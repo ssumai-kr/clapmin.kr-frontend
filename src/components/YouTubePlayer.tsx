@@ -205,14 +205,14 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
   };
 
   return (
-    <div className="w-full relative py-4">
+    <div className="relative w-full py-4">
       {/* 숨겨진 YouTube 플레이어 */}
       <div className="hidden">
         <div ref={playerRef} />
       </div>
 
       {/* 캐러셀 래퍼 - 고정된 중앙 컨테이너 */}
-      <div className="max-w-sm mx-auto relative overflow-hidden">
+      <div className="relative mx-auto max-w-sm overflow-hidden">
         {/* 캐러셀 컨테이너 */}
         <div
           className="flex gap-4"
@@ -236,19 +236,19 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
           {videoIds.map((videoId, index) => (
             <div
               key={videoId}
-              className="flex-shrink-0 w-full max-w-sm transition-all duration-300"
+              className="w-full max-w-sm flex-shrink-0 transition-all duration-300"
               style={{
                 transform: index === currentIndex ? "scale(1)" : "scale(0.85)",
                 opacity: index === currentIndex ? 1 : 0.5,
               }}
             >
-              <div className="bg-card/90 backdrop-blur-md rounded-2xl overflow-hidden shadow-2xl border relative">
+              <div className="relative overflow-hidden rounded-2xl border bg-card/90 shadow-2xl backdrop-blur-md">
                 {/* 썸네일 */}
                 <div className="relative aspect-video bg-gradient-to-br from-gray-800 to-gray-900">
                   <img
                     src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
                     alt="Video thumbnail"
-                    className="w-full h-full object-cover"
+                    className="h-full w-full object-cover"
                     onError={(e) => {
                       e.currentTarget.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
                     }}
@@ -265,7 +265,7 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
                           e.preventDefault();
                           togglePlay(e);
                         }}
-                        className="absolute inset-0 flex items-center justify-center group"
+                        className="group absolute inset-0 flex items-center justify-center"
                         aria-label={isPlaying ? "일시정지" : "재생"}
                         style={{
                           WebkitTapHighlightColor: "transparent",
@@ -273,12 +273,12 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
                         }}
                       >
                         <div
-                          className="backdrop-blur-sm p-4 rounded-full transition-all transform group-hover:scale-110 group-active:scale-95"
+                          className="transform rounded-full p-4 backdrop-blur-sm transition-all group-hover:scale-110 group-active:scale-95"
                           style={{ backgroundColor: "rgba(30, 215, 96, 0.9)" }}
                         >
                           {isPlaying ? (
                             <svg
-                              className="w-8 h-8 text-white"
+                              className="h-8 w-8 text-white"
                               fill="currentColor"
                               viewBox="0 0 24 24"
                             >
@@ -286,7 +286,7 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
                             </svg>
                           ) : (
                             <svg
-                              className="w-8 h-8 text-white"
+                              className="h-8 w-8 text-white"
                               fill="currentColor"
                               viewBox="0 0 24 24"
                             >
@@ -297,20 +297,20 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
                       </button>
 
                       {/* 음량 조절 */}
-                      <div className="absolute top-4 right-4 flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-lg px-3 py-2">
+                      <div className="absolute right-4 top-4 flex items-center gap-2 rounded-lg bg-black/50 px-3 py-2 backdrop-blur-sm">
                         <button
                           onClick={(e) => toggleMute(e)}
                           onTouchEnd={(e) => {
                             e.preventDefault();
                             toggleMute(e);
                           }}
-                          className="text-white hover:text-gray-300 transition-colors"
+                          className="text-white transition-colors hover:text-gray-300"
                           aria-label={isMuted ? "음소거 해제" : "음소거"}
                           style={{ touchAction: "manipulation" }}
                         >
                           {isMuted || volume === 0 ? (
                             <svg
-                              className="w-5 h-5"
+                              className="h-5 w-5"
                               fill="currentColor"
                               viewBox="0 0 24 24"
                             >
@@ -318,7 +318,7 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
                             </svg>
                           ) : volume < 50 ? (
                             <svg
-                              className="w-5 h-5"
+                              className="h-5 w-5"
                               fill="currentColor"
                               viewBox="0 0 24 24"
                             >
@@ -326,7 +326,7 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
                             </svg>
                           ) : (
                             <svg
-                              className="w-5 h-5"
+                              className="h-5 w-5"
                               fill="currentColor"
                               viewBox="0 0 24 24"
                             >
@@ -340,11 +340,7 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
                           max="100"
                           value={volume}
                           onChange={handleVolumeChange}
-                          className="w-20 h-1 bg-white/30 rounded-lg appearance-none cursor-pointer
-                          [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3
-                          [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white
-                          [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3
-                          [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-0"
+                          className="h-1 w-20 cursor-pointer appearance-none rounded-lg bg-white/30 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-white [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
                         />
                       </div>
                     </>
@@ -352,7 +348,7 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
 
                   {/* 타이틀 */}
                   <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <p className="text-white font-semibold text-sm drop-shadow-lg line-clamp-2">
+                    <p className="line-clamp-2 text-sm font-semibold text-white drop-shadow-lg">
                       {index === currentIndex ? videoTitle || "Loading..." : ""}
                     </p>
                   </div>
@@ -360,8 +356,8 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
 
                 {/* 프로그레스 바 - 현재 재생 중인 곡에만 표시 */}
                 {index === currentIndex && (
-                  <div className="px-4 pt-3 pb-4">
-                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1 mb-2">
+                  <div className="px-4 pb-4 pt-3">
+                    <div className="mb-2 h-1 w-full rounded-full bg-gray-200 dark:bg-gray-700">
                       <div
                         className="h-1 rounded-full transition-all"
                         style={{
@@ -386,7 +382,7 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
       </div>
 
       {/* 페이지 인디케이터 */}
-      <div className="flex justify-center gap-2 mt-6">
+      <div className="mt-6 flex justify-center gap-2">
         {videoIds.map((_, index) => (
           <button
             key={index}
@@ -403,7 +399,7 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
       </div>
 
       {/* 브라우저 권장 메시지 */}
-      <div className="text-center mt-4">
+      <div className="mt-4 text-center">
         <p className="text-xs text-gray-600">
           Best experience with Chrome or Safari browser
         </p>

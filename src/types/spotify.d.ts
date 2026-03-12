@@ -7,13 +7,34 @@ declare namespace Spotify {
   interface Player {
     connect(): Promise<boolean>;
     disconnect(): void;
-    addListener(event: 'ready', callback: (device: WebPlaybackDevice) => void): void;
-    addListener(event: 'not_ready', callback: (device: WebPlaybackDevice) => void): void;
-    addListener(event: 'player_state_changed', callback: (state: WebPlaybackState | null) => void): void;
-    addListener(event: 'initialization_error', callback: (error: WebPlaybackError) => void): void;
-    addListener(event: 'authentication_error', callback: (error: WebPlaybackError) => void): void;
-    addListener(event: 'account_error', callback: (error: WebPlaybackError) => void): void;
-    addListener(event: 'playback_error', callback: (error: WebPlaybackError) => void): void;
+    addListener(
+      event: "ready",
+      callback: (device: WebPlaybackDevice) => void
+    ): void;
+    addListener(
+      event: "not_ready",
+      callback: (device: WebPlaybackDevice) => void
+    ): void;
+    addListener(
+      event: "player_state_changed",
+      callback: (state: WebPlaybackState | null) => void
+    ): void;
+    addListener(
+      event: "initialization_error",
+      callback: (error: WebPlaybackError) => void
+    ): void;
+    addListener(
+      event: "authentication_error",
+      callback: (error: WebPlaybackError) => void
+    ): void;
+    addListener(
+      event: "account_error",
+      callback: (error: WebPlaybackError) => void
+    ): void;
+    addListener(
+      event: "playback_error",
+      callback: (error: WebPlaybackError) => void
+    ): void;
     removeListener(event: string, callback?: () => void): void;
     getCurrentState(): Promise<WebPlaybackState | null>;
     setName(name: string): Promise<void>;
@@ -61,8 +82,8 @@ declare namespace Spotify {
   interface WebPlaybackTrack {
     uri: string;
     id: string;
-    type: 'track' | 'episode' | 'ad';
-    media_type: 'audio' | 'video';
+    type: "track" | "episode" | "ad";
+    media_type: "audio" | "video";
     name: string;
     is_playable: boolean;
     duration_ms: number;
