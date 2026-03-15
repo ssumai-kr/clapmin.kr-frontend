@@ -1,6 +1,7 @@
 import { Github, Mail, GraduationCap } from "lucide-react";
 import itsSupportCard from "../images/itssupportcard.png";
 import sapLogo from "../images/sap.png";
+import GitHubContributions from "./GitHubContributions";
 
 export default function Hero() {
   return (
@@ -74,6 +75,8 @@ export default function Hero() {
                 Email
               </a>
             </div>
+
+            <GitHubContributions />
           </div>
         </div>
       </div>
