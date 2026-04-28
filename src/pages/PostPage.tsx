@@ -29,16 +29,14 @@ const mdComponents: Components = {
   ),
 
   p: ({ children }) => (
-    <p className="mb-5 text-base leading-[1.9] text-foreground/75">{children}</p>
+    <p className="mb-5 text-base leading-[1.9] text-foreground/75">
+      {children}
+    </p>
   ),
 
-  ul: ({ children }) => (
-    <ul className="my-5 space-y-2">{children}</ul>
-  ),
+  ul: ({ children }) => <ul className="my-5 space-y-2">{children}</ul>,
 
-  ol: ({ children }) => (
-    <ol className="my-5 space-y-2">{children}</ol>
-  ),
+  ol: ({ children }) => <ol className="my-5 space-y-2">{children}</ol>,
 
   li: ({ children }) => (
     <li className="flex items-start gap-3 text-base leading-relaxed text-foreground/75">

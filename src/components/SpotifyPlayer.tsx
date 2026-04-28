@@ -164,9 +164,7 @@ export default function SpotifyPlayer({ token }: SpotifyPlayerProps) {
         <div className="rounded-2xl border bg-card/60 p-8 text-center backdrop-blur-sm">
           <div className="animate-pulse space-y-2">
             <div className="mx-auto h-12 w-12 rounded-full bg-secondary"></div>
-            <p className="text-sm text-muted-foreground">
-              Loading playlist...
-            </p>
+            <p className="text-sm text-muted-foreground">Loading playlist...</p>
           </div>
         </div>
       )}

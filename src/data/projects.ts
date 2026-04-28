@@ -13,7 +13,8 @@ export const projects: Project[] = [
   {
     id: "1",
     title: "SSUPORT",
-    description: "Integrated Special Scholarship Platform of Soongsil University",
+    description:
+      "Integrated Special Scholarship Platform of Soongsil University",
     tags: [],
     liveUrl: "https://ssuport.kr/",
     imageUrl: "/project1.svg",
@@ -30,7 +31,8 @@ export const projects: Project[] = [
   {
     id: "3",
     title: "grabPT",
-    description: "A matching platform for personal training (PT) clients and professionals",
+    description:
+      "A matching platform for personal training (PT) clients and professionals",
     tags: [],
     imageUrl: "/project3.png",
     imageContain: true,

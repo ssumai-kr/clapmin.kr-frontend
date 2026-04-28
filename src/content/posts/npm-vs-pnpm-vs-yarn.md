@@ -58,7 +58,7 @@ Flat hoisting introduces a subtle but important bug: **phantom dependencies**. B
 // package.json only declares "express", which depends on "lodash"
 // lodash is hoisted to top-level node_modules
 // This import works today — but it's a phantom dependency
-import _ from 'lodash';
+import _ from "lodash";
 ```
 
 This is dangerous because:
@@ -124,8 +124,7 @@ Yarn Classic uses the same flat hoisting strategy as npm but differs in several 
 
 ```yaml
 # yarn.lock (excerpt)
-lodash@^4.17.21:
-  version "4.17.21"
+lodash@^4.17.21: version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZkFezoU471taVGwhOTQ==
 ```
@@ -219,7 +218,7 @@ Because each package inside `.pnpm/` can only see its own declared dependencies 
 pnpm uses `pnpm-lock.yaml` as its lockfile. It is more explicit than `yarn.lock` and captures the complete, unambiguous dependency graph including peer dependency resolutions:
 
 ```yaml
-lockfileVersion: '9.0'
+lockfileVersion: "9.0"
 
 importers:
   .:
@@ -230,7 +229,7 @@ importers:
 
 packages:
   express@4.18.2:
-    resolution: {integrity: sha512-...}
+    resolution: { integrity: sha512-... }
     dependencies:
       accepts: 1.3.8
 ```
@@ -241,9 +240,9 @@ pnpm has first-class monorepo support via `pnpm-workspace.yaml`:
 
 ```yaml
 packages:
-  - 'apps/*'
-  - 'packages/*'
-  - '!**/test/**'
+  - "apps/*"
+  - "packages/*"
+  - "!**/test/**"
 ```
 
 The workspace protocol (`workspace:*`, `workspace:^`) makes cross-package references explicit:
@@ -280,30 +279,30 @@ pnpm's workspace implementation is widely regarded as the most ergonomic in the 
 
 The table below summarizes relative performance across common install scenarios. Results vary by machine, network speed, project size, and cache state.
 
-| Scenario | npm | Yarn Classic | Yarn Berry (PnP) | pnpm |
-|---|---|---|---|---|
-| Cold install (empty cache) | Slowest | Fast | Fast | Fast |
-| Warm install (full cache hit) | Slow | Fast | Fastest | Fastest |
-| Repeated install (existing `node_modules`) | Slow | Medium | N/A | Fastest |
-| Disk usage per project | High | High | Very low | Very low |
-| Disk usage across many projects | Very high | High | Low | Lowest |
-| Monorepo install at scale | Medium | Medium | Fast | Fastest |
+| Scenario                                   | npm       | Yarn Classic | Yarn Berry (PnP) | pnpm     |
+| ------------------------------------------ | --------- | ------------ | ---------------- | -------- |
+| Cold install (empty cache)                 | Slowest   | Fast         | Fast             | Fast     |
+| Warm install (full cache hit)              | Slow      | Fast         | Fastest          | Fastest  |
+| Repeated install (existing `node_modules`) | Slow      | Medium       | N/A              | Fastest  |
+| Disk usage per project                     | High      | High         | Very low         | Very low |
+| Disk usage across many projects            | Very high | High         | Low              | Lowest   |
+| Monorepo install at scale                  | Medium    | Medium       | Fast             | Fastest  |
 
 ---
 
 ## Feature Comparison
 
-| Feature | npm | Yarn Classic | Yarn Berry | pnpm |
-|---|---|---|---|---|
-| Bundled with Node.js | ✅ | ❌ | ❌ | ❌ |
-| Lockfile | `package-lock.json` | `yarn.lock` | `yarn.lock` | `pnpm-lock.yaml` |
-| Workspaces | ✅ (v7+) | ✅ | ✅ | ✅ |
-| Offline cache | Partial | ✅ | ✅ | ✅ |
-| Phantom dependencies | ✅ (problem) | ✅ (problem) | ❌ (PnP) | ❌ (strict) |
-| Global disk deduplication | ❌ | ❌ | ✅ | ✅ |
-| `node_modules`-free installs | ❌ | ❌ | ✅ (PnP) | ❌ |
-| Ecosystem compatibility | Excellent | Good | Mixed | Good–Excellent |
-| Corepack support | ✅ | ✅ | ✅ | ✅ |
+| Feature                      | npm                 | Yarn Classic | Yarn Berry  | pnpm             |
+| ---------------------------- | ------------------- | ------------ | ----------- | ---------------- |
+| Bundled with Node.js         | ✅                  | ❌           | ❌          | ❌               |
+| Lockfile                     | `package-lock.json` | `yarn.lock`  | `yarn.lock` | `pnpm-lock.yaml` |
+| Workspaces                   | ✅ (v7+)            | ✅           | ✅          | ✅               |
+| Offline cache                | Partial             | ✅           | ✅          | ✅               |
+| Phantom dependencies         | ✅ (problem)        | ✅ (problem) | ❌ (PnP)    | ❌ (strict)      |
+| Global disk deduplication    | ❌                  | ❌           | ✅          | ✅               |
+| `node_modules`-free installs | ❌                  | ❌           | ✅ (PnP)    | ❌               |
+| Ecosystem compatibility      | Excellent           | Good         | Mixed       | Good–Excellent   |
+| Corepack support             | ✅                  | ✅           | ✅          | ✅               |
 
 ---
 
@@ -338,7 +337,7 @@ The table below summarizes relative performance across common install scenarios.
 
 ## Summary
 
-All three tools install packages from the same registry and share the same `package.json` contract. The differences lie in *how* they store packages on disk and *how strictly* they enforce dependency isolation.
+All three tools install packages from the same registry and share the same `package.json` contract. The differences lie in _how_ they store packages on disk and _how strictly_ they enforce dependency isolation.
 
 - **npm** is the universal baseline — always available and maximally compatible, but suffers from phantom dependencies and wasteful disk usage
 - **Yarn** fixed npm's speed and determinism problems; Yarn Berry's PnP is a genuinely radical rethink of package management, but PnP compatibility remains a real operational concern

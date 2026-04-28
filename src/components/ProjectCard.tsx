@@ -7,7 +7,7 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ project }: ProjectCardProps) {
   return (
-    <article className="group rounded-xl border border-border bg-card overflow-hidden transition-all duration-200 hover:border-foreground/30 hover:shadow-md">
+    <article className="group overflow-hidden rounded-xl border border-border bg-card transition-all duration-200 hover:border-foreground/30 hover:shadow-md">
       {project.imageUrl && (
         <div className="aspect-video w-full overflow-hidden bg-muted">
           <img

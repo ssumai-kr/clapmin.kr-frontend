@@ -144,7 +144,9 @@ export default function GitHubContributions() {
         <>
           <p className="mb-3 text-xs text-muted-foreground">
             I made{" "}
-            <span className="font-semibold text-foreground">{total} contributions</span>{" "}
+            <span className="font-semibold text-foreground">
+              {total} contributions
+            </span>{" "}
             this year 🌱
           </p>
           <svg
@@ -206,7 +208,9 @@ export default function GitHubContributions() {
         >
           <span className="font-semibold">{formatDate(tooltip.date)}</span>
           <span className="ml-2 text-muted-foreground">
-            {tooltip.count > 0 ? `${tooltip.count} contribution${tooltip.count !== 1 ? "s" : ""}` : "No contributions"}
+            {tooltip.count > 0
+              ? `${tooltip.count} contribution${tooltip.count !== 1 ? "s" : ""}`
+              : "No contributions"}
           </span>
         </div>
       )}
