@@ -51,7 +51,7 @@ function getColor(count: number): string {
 
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr);
-  return d.toLocaleDateString("ko-KR", {
+  return d.toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     weekday: "short",
@@ -69,7 +69,7 @@ export default function GitHubContributions() {
   useEffect(() => {
     const token = import.meta.env.VITE_GITHUB_TOKEN;
     if (!token) {
-      setError("VITE_GITHUB_TOKEN이 설정되지 않았어요");
+      setError("VITE_GITHUB_TOKEN is not set");
       setLoading(false);
       return;
     }
@@ -91,7 +91,7 @@ export default function GitHubContributions() {
         setLoading(false);
       })
       .catch(() => {
-        setError("기여 데이터를 불러오지 못했어요");
+        setError("Failed to load contribution data");
         setLoading(false);
       });
   }, []);
@@ -143,8 +143,8 @@ export default function GitHubContributions() {
       {!loading && !error && (
         <>
           <p className="mb-3 text-xs text-muted-foreground">
-            I committed{" "}
-            <span className="font-semibold text-foreground">{total} times</span>{" "}
+            I made{" "}
+            <span className="font-semibold text-foreground">{total} contributions</span>{" "}
             this year 🌱
           </p>
           <svg
@@ -206,7 +206,7 @@ export default function GitHubContributions() {
         >
           <span className="font-semibold">{formatDate(tooltip.date)}</span>
           <span className="ml-2 text-muted-foreground">
-            {tooltip.count > 0 ? `${tooltip.count}회 커밋` : "커밋 없음"}
+            {tooltip.count > 0 ? `${tooltip.count} contribution${tooltip.count !== 1 ? "s" : ""}` : "No contributions"}
           </span>
         </div>
       )}

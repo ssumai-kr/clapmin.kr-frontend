@@ -1,23 +1,23 @@
-import { posts } from "../data/posts";
-import PostCard from "./PostCard";
+import { projects } from "../data/projects";
+import ProjectCard from "./ProjectCard";
 
-export default function PostList() {
+export default function ProjectList() {
   return (
-    <section id="posts">
+    <section id="projects" className="mb-10">
       <h2 className="mb-4 text-lg font-bold text-foreground">
-        Posts{" "}
+        Projects{" "}
         <span className="ml-1 text-sm font-normal text-muted-foreground">
-          {posts.length} articles
+          {projects.length} projects
         </span>
       </h2>
-      {posts.length === 0 ? (
+      {projects.length === 0 ? (
         <p className="py-10 text-center text-sm text-muted-foreground">
-          No posts yet.
+          No projects yet.
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {posts.map((post) => (
-            <PostCard key={post.id} post={post} />
+          {projects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
           ))}
         </div>
       )}

@@ -1,23 +1,23 @@
 ---
-name: 기능 요청
-about: 새로운 기능을 제안할 때 사용하세요
+name: Feature Request
+about: Use this to propose a new feature
 title: "[FEAT] "
 labels: enhancement
 assignees: ssumai-kr
 ---
 
-## 기능 요약
+## Feature Summary
 
-제안하는 기능에 대한 간결한 설명을 작성해주세요.
+Provide a concise description of the feature you are proposing.
 
-## 배경 및 목적
+## Background & Purpose
 
-이 기능이 왜 필요한지, 어떤 문제를 해결하는지 설명해주세요.
+Explain why this feature is needed and what problem it solves.
 
-## 구현 방안 (선택)
+## Implementation Approach (optional)
 
-기능을 어떻게 구현하면 좋을지 아이디어가 있다면 작성해주세요.
+If you have ideas on how to implement it, describe them here.
 
-## 참고 자료 (선택)
+## References (optional)
 
-관련 링크, 레퍼런스, 스크린샷 등이 있으면 첨부해주세요.
+Attach any relevant links, references, or screenshots.

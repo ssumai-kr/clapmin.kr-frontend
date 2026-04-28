@@ -1,28 +1,28 @@
-## 개요
+## Overview
 
-> 이 PR에서 무엇을 변경했는지 간략히 설명해주세요.
+> Briefly describe what was changed in this PR.
 
-## 변경 유형
+## Change Type
 
-- [ ] `feat` — 새로운 기능 추가
-- [ ] `fix` — 버그 수정
-- [ ] `style` — UI/스타일 변경 (기능 변화 없음)
-- [ ] `refactor` — 코드 리팩토링 (기능/버그 변화 없음)
-- [ ] `chore` — 빌드, 설정, 패키지 등 기타 변경
-- [ ] `docs` — 문서 수정
+- [ ] `feat` — New feature
+- [ ] `fix` — Bug fix
+- [ ] `style` — UI/style change (no functional change)
+- [ ] `refactor` — Code refactoring (no functional/bug change)
+- [ ] `chore` — Build, config, package, or other misc changes
+- [ ] `docs` — Documentation update
 
-## 변경 사항
+## Changes
 
 -
 
-## 스크린샷 (UI 변경 시)
+## Screenshots (if UI changed)
 
 | Before | After |
 | ------ | ----- |
 |        |       |
 
-## 체크리스트
+## Checklist
 
-- [ ] `pnpm build` 오류 없음
-- [ ] `pnpm lint` 경고/오류 없음
-- [ ] 모바일 환경에서 확인
+- [ ] `pnpm build` passes without errors
+- [ ] `pnpm lint` passes without warnings/errors
+- [ ] Verified on mobile

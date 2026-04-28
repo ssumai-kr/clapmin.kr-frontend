@@ -71,7 +71,7 @@ export default function SpotifyPlayer({ token }: SpotifyPlayerProps) {
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
           <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-primary"></div>
-          <p className="text-muted-foreground">Spotify Player 연결 중...</p>
+          <p className="text-muted-foreground">Connecting Spotify Player...</p>
         </div>
       </div>
     );
@@ -118,7 +118,7 @@ export default function SpotifyPlayer({ token }: SpotifyPlayerProps) {
             <button
               onClick={skipToPrevious}
               className="rounded-full p-2 transition-colors hover:bg-secondary/50"
-              aria-label="이전 트랙"
+              aria-label="Previous track"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
@@ -128,7 +128,7 @@ export default function SpotifyPlayer({ token }: SpotifyPlayerProps) {
             <button
               onClick={togglePlay}
               className="rounded-full bg-primary p-3 text-primary-foreground shadow-lg transition-opacity hover:opacity-90"
-              aria-label={playerState.isPaused ? "재생" : "일시정지"}
+              aria-label={playerState.isPaused ? "Play" : "Pause"}
             >
               {playerState.isPaused ? (
                 <svg
@@ -152,7 +152,7 @@ export default function SpotifyPlayer({ token }: SpotifyPlayerProps) {
             <button
               onClick={skipToNext}
               className="rounded-full p-2 transition-colors hover:bg-secondary/50"
-              aria-label="다음 트랙"
+              aria-label="Next track"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
@@ -165,7 +165,7 @@ export default function SpotifyPlayer({ token }: SpotifyPlayerProps) {
           <div className="animate-pulse space-y-2">
             <div className="mx-auto h-12 w-12 rounded-full bg-secondary"></div>
             <p className="text-sm text-muted-foreground">
-              플레이리스트 로딩 중...
+              Loading playlist...
             </p>
           </div>
         </div>

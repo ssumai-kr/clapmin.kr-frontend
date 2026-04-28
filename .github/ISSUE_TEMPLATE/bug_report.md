@@ -1,36 +1,36 @@
 ---
-name: 버그 리포트
-about: 버그를 발견했을 때 사용하세요
+name: Bug Report
+about: Use this when you encounter a bug
 title: "[BUG] "
 labels: bug
 assignees: ssumai-kr
 ---
 
-## 버그 설명
+## Bug Description
 
-버그에 대한 명확하고 간결한 설명을 작성해주세요.
+Provide a clear and concise description of the bug.
 
-## 재현 방법
+## Steps to Reproduce
 
-1. '...' 페이지로 이동
-2. '...' 클릭
-3. '...' 스크롤
-4. 에러 발생
+1. Go to '...' page
+2. Click '...'
+3. Scroll '...'
+4. Error occurs
 
-## 예상 동작
+## Expected Behavior
 
-어떻게 동작해야 하는지 작성해주세요.
+Describe what you expected to happen.
 
-## 실제 동작
+## Actual Behavior
 
-실제로 어떻게 동작하는지 작성해주세요.
+Describe what actually happened.
 
-## 스크린샷
+## Screenshots
 
-해당되는 경우 스크린샷을 첨부해주세요.
+Attach screenshots if applicable.
 
-## 환경
+## Environment
 
-- OS: [예: macOS 14, Windows 11]
-- 브라우저: [예: Chrome 120, Safari 17]
-- 기기: [예: Desktop, iPhone 15]
+- OS: [e.g. macOS 14, Windows 11]
+- Browser: [e.g. Chrome 120, Safari 17]
+- Device: [e.g. Desktop, iPhone 15]

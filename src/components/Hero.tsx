@@ -8,7 +8,7 @@ export default function Hero() {
     <section className="px-4 pb-16 pt-28 sm:px-6">
       <div className="mx-auto max-w-5xl">
         <div className="flex flex-col items-center gap-10 md:flex-row md:items-start">
-          {/* 명함 이미지 */}
+          {/* Business card image */}
           <div className="w-full max-w-xs flex-shrink-0 md:w-72 md:max-w-none">
             <img
               src={itsSupportCard}
@@ -17,15 +17,14 @@ export default function Hero() {
             />
           </div>
 
-          {/* 프로필 정보 */}
+          {/* Profile info */}
           <div className="flex-1 text-center md:text-left">
             <p className="mb-2 text-sm font-medium uppercase tracking-widest text-muted-foreground">
               Software Developer
             </p>
             <h1 className="mb-1 text-4xl font-bold text-foreground sm:text-5xl">
-              박수민
+              Park Sumin
             </h1>
-            <p className="mb-5 text-xl text-muted-foreground">Park Sumin</p>
 
             <div className="mb-5 flex flex-wrap items-center justify-center gap-2 md:justify-start">
               <span className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">
@@ -38,12 +37,10 @@ export default function Hero() {
             </div>
 
             <p className="mx-auto mb-6 max-w-md text-sm leading-relaxed text-muted-foreground md:mx-0">
-              웹 소프트웨어 개발과 SAP ERP 개발을 함께 하고 있는 개발자입니다.
-              사용자 경험을 중시하는 인터랙티브한 프론트엔드를 만드는 것을
-              좋아합니다.
+              Developer focused on web software development and SAP ERP systems.
             </p>
 
-            {/* 학력 */}
+            {/* Education */}
             <div className="mb-6 flex items-start justify-center gap-2 md:justify-start">
               <GraduationCap className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
               <div className="text-left text-sm">

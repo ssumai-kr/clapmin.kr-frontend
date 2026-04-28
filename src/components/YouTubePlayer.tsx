@@ -28,7 +28,7 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
   const currentVideoId = videoIds[currentIndex];
 
   useEffect(() => {
-    // YouTube IFrame API 로드
+    // Load YouTube IFrame API
     const tag = document.createElement("script");
     tag.src = "https://www.youtube.com/iframe_api";
     const firstScriptTag = document.getElementsByTagName("script")[0];
@@ -56,11 +56,11 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
               if (event.data === window.YT.PlayerState.PLAYING) {
                 setIsPlaying(true);
               } else if (event.data === window.YT.PlayerState.ENDED) {
-                // 다음 곡으로 자동 넘김
+                // Auto advance to next track
                 if (currentIndex < videoIds.length - 1) {
                   setCurrentIndex(currentIndex + 1);
                 } else {
-                  setCurrentIndex(0); // 마지막 곡이면 처음으로
+                  setCurrentIndex(0); // Loop back to first if last track
                 }
               } else if (event.data === window.YT.PlayerState.PAUSED) {
                 setIsPlaying(false);
@@ -78,14 +78,14 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
     };
   }, []);
 
-  // 비디오 변경 시 플레이어 업데이트
+  // Update player on video change
   useEffect(() => {
     if (player && player.loadVideoById) {
       player.loadVideoById(currentVideoId);
       player.playVideo();
       setCurrentTime(0);
 
-      // 새 비디오의 정보를 가져오기 위해 약간의 지연 후 업데이트
+      // Slight delay to fetch info for the new video
       setTimeout(() => {
         if (player.getDuration) {
           setDuration(player.getDuration());
@@ -166,14 +166,14 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
 
   const handleMouseDown = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
-    if (target.closest("button")) return; // 버튼 클릭 시 드래그 방지
+    if (target.closest("button")) return; // Prevent drag on button click
     setIsDragging(true);
     setStartX(e.clientX);
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
     const target = e.target as HTMLElement;
-    if (target.closest("button")) return; // 버튼 터치 시 드래그 방지
+    if (target.closest("button")) return; // Prevent drag on button touch
     setIsDragging(true);
     setStartX(e.touches[0].clientX);
   };
@@ -194,7 +194,7 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
     if (!isDragging) return;
     setIsDragging(false);
 
-    // 50px 이상 드래그하면 페이지 전환
+    // Switch page if dragged more than 50px
     if (translateX > 50 && currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
     } else if (translateX < -50 && currentIndex < videoIds.length - 1) {
@@ -206,14 +206,14 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
 
   return (
     <div className="relative w-full py-4">
-      {/* 숨겨진 YouTube 플레이어 */}
+      {/* Hidden YouTube player */}
       <div className="hidden">
         <div ref={playerRef} />
       </div>
 
-      {/* 캐러셀 래퍼 - 고정된 중앙 컨테이너 */}
+      {/* Carousel wrapper - fixed center container */}
       <div className="relative mx-auto max-w-sm overflow-hidden">
-        {/* 캐러셀 컨테이너 */}
+        {/* Carousel container */}
         <div
           className="flex gap-4"
           onMouseDown={handleMouseDown}
@@ -243,7 +243,7 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
               }}
             >
               <div className="relative overflow-hidden rounded-2xl border bg-card/90 shadow-2xl backdrop-blur-md">
-                {/* 썸네일 */}
+                {/* Thumbnail */}
                 <div className="relative aspect-video bg-gradient-to-br from-gray-800 to-gray-900">
                   <img
                     src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
@@ -255,10 +255,10 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
-                  {/* 현재 재생 중인 곡에만 컨트롤 표시 */}
+                  {/* Show controls only for the currently playing track */}
                   {index === currentIndex && (
                     <>
-                      {/* 재생 버튼 오버레이 */}
+                      {/* Play button overlay */}
                       <button
                         onClick={(e) => togglePlay(e)}
                         onTouchEnd={(e) => {
@@ -266,7 +266,7 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
                           togglePlay(e);
                         }}
                         className="group absolute inset-0 flex items-center justify-center"
-                        aria-label={isPlaying ? "일시정지" : "재생"}
+                        aria-label={isPlaying ? "Pause" : "Play"}
                         style={{
                           WebkitTapHighlightColor: "transparent",
                           touchAction: "manipulation",
@@ -296,7 +296,7 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
                         </div>
                       </button>
 
-                      {/* 음량 조절 */}
+                      {/* Volume control */}
                       <div className="absolute right-4 top-4 flex items-center gap-2 rounded-lg bg-black/50 px-3 py-2 backdrop-blur-sm">
                         <button
                           onClick={(e) => toggleMute(e)}
@@ -305,7 +305,7 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
                             toggleMute(e);
                           }}
                           className="text-white transition-colors hover:text-gray-300"
-                          aria-label={isMuted ? "음소거 해제" : "음소거"}
+                          aria-label={isMuted ? "Unmute" : "Mute"}
                           style={{ touchAction: "manipulation" }}
                         >
                           {isMuted || volume === 0 ? (
@@ -346,7 +346,7 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
                     </>
                   )}
 
-                  {/* 타이틀 */}
+                  {/* Title */}
                   <div className="absolute bottom-0 left-0 right-0 p-4">
                     <p className="line-clamp-2 text-sm font-semibold text-white drop-shadow-lg">
                       {index === currentIndex ? videoTitle || "Loading..." : ""}
@@ -354,7 +354,7 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
                   </div>
                 </div>
 
-                {/* 프로그레스 바 - 현재 재생 중인 곡에만 표시 */}
+                {/* Progress bar - shown only for the currently playing track */}
                 {index === currentIndex && (
                   <div className="px-4 pb-4 pt-3">
                     <div className="mb-2 h-1 w-full rounded-full bg-gray-200 dark:bg-gray-700">
@@ -381,7 +381,7 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
         </div>
       </div>
 
-      {/* 페이지 인디케이터 */}
+      {/* Page indicator */}
       <div className="mt-6 flex justify-center gap-2">
         {videoIds.map((_, index) => (
           <button
@@ -393,12 +393,12 @@ export default function YouTubePlayer({ videoIds }: YouTubePlayerProps) {
                 : "w-2 bg-gray-400 hover:bg-gray-600"
             }`}
             style={index === currentIndex ? { backgroundColor: "#1ED760" } : {}}
-            aria-label={`${index + 1}번 곡`}
+            aria-label={`Track ${index + 1}`}
           />
         ))}
       </div>
 
-      {/* 브라우저 권장 메시지 */}
+      {/* Browser recommendation */}
       <div className="mt-4 text-center">
         <p className="text-xs text-gray-600">
           Best experience with Chrome or Safari browser
