@@ -1,11 +1,13 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import ProjectList from "./components/ProjectList";
 import PostList from "./components/PostList";
 import MusicSection from "./components/MusicSection";
 import Footer from "./components/Footer";
+import PostPage from "./pages/PostPage";
 
-function App() {
+function Home() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -23,6 +25,17 @@ function App() {
       </main>
       <Footer />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/posts/:slug" element={<PostPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
