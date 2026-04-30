@@ -7,6 +7,7 @@ import MusicSection from "./components/MusicSection";
 import Footer from "./components/Footer";
 import PostPage from "./pages/PostPage";
 import LoginPage from "./pages/LoginPage";
+import WritePostPage from "./pages/WritePostPage";
 import { AuthProvider } from "./context/AuthContext";
 
 function Home() {
@@ -38,6 +39,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/posts/:slug" element={<PostPage />} />
           <Route path="/admin/login" element={<LoginPage />} />
+          <Route path="/posts/write" element={<WritePostPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
