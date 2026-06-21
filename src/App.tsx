@@ -37,9 +37,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/posts/write" element={<WritePostPage />} />
           <Route path="/posts/:slug" element={<PostPage />} />
           <Route path="/admin/login" element={<LoginPage />} />
-          <Route path="/posts/write" element={<WritePostPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

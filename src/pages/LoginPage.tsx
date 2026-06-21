@@ -46,7 +46,11 @@ export default function LoginPage() {
         {/* Header */}
         <div className="mb-8 flex flex-col items-center gap-3">
           <Link to="/">
-            <img src={clapminLogo} alt="clapmin" className="h-10 w-10 rounded-lg" />
+            <img
+              src={clapminLogo}
+              alt="clapmin"
+              className="h-10 w-10 rounded-lg"
+            />
           </Link>
           <div className="text-center">
             <h1 className="text-xl font-bold text-foreground">Admin Login</h1>

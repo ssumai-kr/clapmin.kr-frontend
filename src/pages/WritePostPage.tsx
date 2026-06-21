@@ -1,9 +1,12 @@
-import { useState, useEffect, FormEvent } from "react";
+import { useRef, useEffect, FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Eye, EyeOff, Send } from "lucide-react";
+import { ArrowLeft, Send } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { apiFetchAuth } from "../lib/api";
-import MarkdownRenderer from "../components/MarkdownRenderer";
+import { Editor } from "@toast-ui/react-editor";
+import "@toast-ui/editor/dist/toastui-editor.css";
+import "@toast-ui/editor/dist/theme/toastui-editor-dark.css";
+import { useState } from "react";
 
 function toSlug(title: string): string {
   return title
@@ -21,6 +24,7 @@ function todayString(): string {
 export default function WritePostPage() {
   const { isAuthenticated, token } = useAuth();
   const navigate = useNavigate();
+  const editorRef = useRef<InstanceType<typeof Editor>>(null);
 
   useEffect(() => {
     if (!isAuthenticated) navigate("/admin/login");
@@ -32,12 +36,9 @@ export default function WritePostPage() {
   const [excerpt, setExcerpt] = useState("");
   const [date, setDate] = useState(todayString());
   const [tags, setTags] = useState("");
-  const [content, setContent] = useState("");
-  const [preview, setPreview] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // 타이틀 변경 시 slug 자동 생성 (사용자가 직접 수정한 경우엔 유지)
   useEffect(() => {
     if (!slugEdited) setSlug(toSlug(title));
   }, [title, slugEdited]);
@@ -45,6 +46,13 @@ export default function WritePostPage() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
+
+    const content = editorRef.current?.getInstance().getMarkdown() ?? "";
+    if (!content.trim()) {
+      setError("내용을 입력하세요.");
+      return;
+    }
+
     setLoading(true);
 
     const tagList = tags
@@ -55,7 +63,14 @@ export default function WritePostPage() {
     try {
       const res = await apiFetchAuth("/api/posts", token!, {
         method: "POST",
-        body: JSON.stringify({ title, slug, excerpt, date, tags: tagList, content }),
+        body: JSON.stringify({
+          title,
+          slug,
+          excerpt,
+          date,
+          tags: tagList,
+          content,
+        }),
       });
 
       if (res.status === 409) {
@@ -91,33 +106,25 @@ export default function WritePostPage() {
             홈으로
           </Link>
 
-          <span className="text-sm font-semibold text-foreground">새 글 작성</span>
+          <span className="text-sm font-semibold text-foreground">
+            새 글 작성
+          </span>
 
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setPreview((v) => !v)}
-              className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {preview ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-              {preview ? "에디터" : "프리뷰"}
-            </button>
-            <button
-              form="write-form"
-              type="submit"
-              disabled={loading}
-              className="flex items-center gap-1.5 rounded-lg bg-foreground px-4 py-1.5 text-xs font-medium text-background transition-opacity hover:opacity-90 disabled:opacity-50"
-            >
-              <Send className="h-3.5 w-3.5" />
-              {loading ? "발행 중..." : "발행"}
-            </button>
-          </div>
+          <button
+            form="write-form"
+            type="submit"
+            disabled={loading}
+            className="flex items-center gap-1.5 rounded-lg bg-foreground px-4 py-1.5 text-xs font-medium text-background transition-opacity hover:opacity-90 disabled:opacity-50"
+          >
+            <Send className="h-3.5 w-3.5" />
+            {loading ? "발행 중..." : "발행"}
+          </button>
         </div>
       </div>
 
       <div className="mx-auto max-w-7xl px-4 pb-16 pt-24 sm:px-6">
-        {/* 메타 필드 */}
         <form id="write-form" onSubmit={handleSubmit}>
+          {/* 메타 필드 */}
           <div className="mb-6 grid grid-cols-1 gap-4 rounded-xl border border-border bg-card p-5 sm:grid-cols-2 lg:grid-cols-4">
             <div className="lg:col-span-2">
               <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
@@ -199,26 +206,19 @@ export default function WritePostPage() {
             )}
           </div>
 
-          {/* 에디터 / 프리뷰 */}
-          {preview ? (
-            <div className="rounded-xl border border-border bg-card p-8">
-              {content ? (
-                <MarkdownRenderer content={content} />
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  내용을 입력하면 여기서 미리볼 수 있습니다.
-                </p>
-              )}
-            </div>
-          ) : (
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              required
+          {/* Toast UI Editor */}
+          <div className="overflow-hidden rounded-xl border border-border">
+            <Editor
+              ref={editorRef}
+              initialValue=""
+              previewStyle="vertical"
+              initialEditType="markdown"
+              height="calc(100vh - 22rem)"
+              theme="dark"
+              useCommandShortcut
               placeholder="마크다운으로 작성하세요..."
-              className="h-[calc(100vh-22rem)] w-full resize-none rounded-xl border border-input bg-background px-5 py-4 font-mono text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-foreground focus:ring-1 focus:ring-foreground"
             />
-          )}
+          </div>
         </form>
       </div>
     </div>

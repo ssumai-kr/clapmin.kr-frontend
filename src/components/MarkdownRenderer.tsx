@@ -20,7 +20,9 @@ const mdComponents: Components = {
     </h4>
   ),
   p: ({ children }) => (
-    <p className="mb-5 text-base leading-[1.9] text-foreground/75">{children}</p>
+    <p className="mb-5 text-base leading-[1.9] text-foreground/75">
+      {children}
+    </p>
   ),
   ul: ({ children }) => <ul className="my-5 space-y-2">{children}</ul>,
   ol: ({ children }) => <ol className="my-5 space-y-2">{children}</ol>,

@@ -1,19 +1,17 @@
 import { Github, ExternalLink } from "lucide-react";
-import type { Project } from "../data/projects";
+import type { Project } from "../types/api";
 
-interface ProjectCardProps {
-  project: Project;
-}
-
-export default function ProjectCard({ project }: ProjectCardProps) {
+export default function ProjectCard({ project }: { project: Project }) {
   return (
     <article className="group overflow-hidden rounded-xl border border-border bg-card transition-all duration-200 hover:border-foreground/30 hover:shadow-md">
-      {project.imageUrl && (
+      {project.image_url && (
         <div className="aspect-video w-full overflow-hidden bg-muted">
           <img
-            src={project.imageUrl}
+            src={project.image_url}
             alt={project.title}
-            className={`h-full w-full transition-transform duration-300 group-hover:scale-105 ${project.imageContain ? "object-contain p-4" : "object-cover"}`}
+            className={`h-full w-full transition-transform duration-300 group-hover:scale-105 ${
+              project.image_contain ? "object-contain p-4" : "object-cover"
+            }`}
           />
         </div>
       )}
@@ -29,9 +27,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         </div>
 
         <div className="ml-3 flex flex-shrink-0 items-center gap-2">
-          {project.githubUrl && (
+          {project.github_url && (
             <a
-              href={project.githubUrl}
+              href={project.github_url}
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground transition-colors hover:text-foreground"
@@ -40,9 +38,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               <Github className="h-4 w-4" />
             </a>
           )}
-          {project.liveUrl && (
+          {project.live_url && (
             <a
-              href={project.liveUrl}
+              href={project.live_url}
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground transition-colors hover:text-foreground"
