@@ -1,143 +1,102 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Calendar } from "lucide-react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import type { Components } from "react-markdown";
-import { posts } from "../data/posts";
+import { apiFetch } from "../lib/api";
+import type { PostDetail } from "../types/api";
+import { posts as hardcodedPosts } from "../data/posts";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-
-const mdComponents: Components = {
-  h2: ({ children }) => (
-    <h2 className="mb-5 mt-14 border-b border-border pb-3 text-2xl font-bold tracking-tight text-foreground first:mt-0">
-      {children}
-    </h2>
-  ),
-
-  h3: ({ children }) => (
-    <h3 className="mb-3 mt-10 flex items-center gap-2.5 text-lg font-bold text-foreground">
-      <span className="h-5 w-1 flex-shrink-0 rounded-full bg-foreground" />
-      {children}
-    </h3>
-  ),
-
-  h4: ({ children }) => (
-    <h4 className="mb-2 mt-6 text-base font-semibold text-foreground">
-      {children}
-    </h4>
-  ),
-
-  p: ({ children }) => (
-    <p className="mb-5 text-base leading-[1.9] text-foreground/75">
-      {children}
-    </p>
-  ),
-
-  ul: ({ children }) => <ul className="my-5 space-y-2">{children}</ul>,
-
-  ol: ({ children }) => <ol className="my-5 space-y-2">{children}</ol>,
-
-  li: ({ children }) => (
-    <li className="flex items-start gap-3 text-base leading-relaxed text-foreground/75">
-      <span className="mt-2.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-muted-foreground" />
-      <span>{children}</span>
-    </li>
-  ),
-
-  code: ({ children }) => {
-    const isBlock = String(children).includes("\n");
-    if (isBlock) {
-      return (
-        <code className="font-mono text-sm leading-relaxed text-foreground">
-          {children}
-        </code>
-      );
-    }
-    return (
-      <code className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.85em] text-foreground">
-        {children}
-      </code>
-    );
-  },
-
-  pre: ({ children }) => (
-    <div className="my-7 overflow-hidden rounded-xl border border-border">
-      <pre className="overflow-x-auto bg-muted/60 p-5 text-sm leading-relaxed">
-        {children}
-      </pre>
-    </div>
-  ),
-
-  blockquote: ({ children }) => (
-    <blockquote className="my-6 rounded-r-lg border-l-4 border-foreground/30 bg-muted/40 px-5 py-4 text-muted-foreground">
-      {children}
-    </blockquote>
-  ),
-
-  hr: () => (
-    <div className="my-12 flex items-center gap-4">
-      <div className="h-px flex-1 bg-border" />
-      <span className="text-xs text-muted-foreground/50">• • •</span>
-      <div className="h-px flex-1 bg-border" />
-    </div>
-  ),
-
-  table: ({ children }) => (
-    <div className="my-8 overflow-hidden rounded-xl border border-border">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">{children}</table>
-      </div>
-    </div>
-  ),
-
-  thead: ({ children }) => (
-    <thead className="bg-foreground text-background">{children}</thead>
-  ),
-
-  tbody: ({ children }) => (
-    <tbody className="divide-y divide-border">{children}</tbody>
-  ),
-
-  tr: ({ children }) => (
-    <tr className="transition-colors hover:bg-muted/40">{children}</tr>
-  ),
-
-  th: ({ children }) => (
-    <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wider">
-      {children}
-    </th>
-  ),
-
-  td: ({ children }) => (
-    <td className="px-5 py-3.5 text-foreground/75">{children}</td>
-  ),
-
-  strong: ({ children }) => (
-    <strong className="font-semibold text-foreground">{children}</strong>
-  ),
-
-  a: ({ href, children }) => (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-foreground underline decoration-border underline-offset-2 transition-colors hover:decoration-foreground"
-    >
-      {children}
-    </a>
-  ),
-};
+import MarkdownRenderer from "../components/MarkdownRenderer";
+import LikeButton from "../components/LikeButton";
 
 export default function PostPage() {
   const { slug } = useParams<{ slug: string }>();
-  const post = posts.find((p) => p.slug === slug);
+  const [post, setPost] = useState<PostDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
+
     window.scrollTo(0, 0);
+    setLoading(true);
+    setNotFound(false);
+
+    apiFetch(`/api/posts/${slug}`)
+      .then((res) => {
+        if (res.status === 404) return null;
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .then((data: PostDetail | null) => {
+        if (cancelled) return;
+        if (data) {
+          setPost(data);
+          apiFetch(`/api/posts/${slug}/view`, { method: "POST" });
+          return;
+        }
+        // API에 없으면 하드코딩 데이터에서 찾기
+        const hardcoded = hardcodedPosts.find((p) => p.slug === slug);
+        if (hardcoded) {
+          setPost({
+            id: -Number(hardcoded.id),
+            title: hardcoded.title,
+            slug: hardcoded.slug,
+            excerpt: hardcoded.excerpt,
+            content: hardcoded.content,
+            date: hardcoded.date,
+            tags: hardcoded.tags,
+            view_count: 0,
+            like_count: 0,
+            created_at: hardcoded.date,
+            updated_at: null,
+          });
+        } else {
+          setNotFound(true);
+        }
+      })
+      .catch(() => {
+        if (cancelled) return;
+        const hardcoded = hardcodedPosts.find((p) => p.slug === slug);
+        if (hardcoded) {
+          setPost({
+            id: -Number(hardcoded.id),
+            title: hardcoded.title,
+            slug: hardcoded.slug,
+            excerpt: hardcoded.excerpt,
+            content: hardcoded.content,
+            date: hardcoded.date,
+            tags: hardcoded.tags,
+            view_count: 0,
+            like_count: 0,
+            created_at: hardcoded.date,
+            updated_at: null,
+          });
+        } else {
+          setNotFound(true);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [slug]);
 
-  if (!post) {
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="flex justify-center pt-48">
+          <div className="h-5 w-5 animate-spin rounded-full border-2 border-border border-t-foreground" />
+        </div>
+      </div>
+    );
+  }
+
+  if (notFound || !post) {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
@@ -190,16 +149,18 @@ export default function PostPage() {
           <p className="mb-4 text-base leading-relaxed text-muted-foreground">
             {post.excerpt}
           </p>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Calendar className="h-3.5 w-3.5" />
-            <time>{formattedDate}</time>
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Calendar className="h-3.5 w-3.5" />
+              <time>{formattedDate}</time>
+            </div>
+            <span>조회 {post.view_count.toLocaleString()}</span>
+            <LikeButton slug={post.slug} initialCount={post.like_count} />
           </div>
         </header>
 
         <article>
-          <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
-            {post.content}
-          </ReactMarkdown>
+          <MarkdownRenderer content={post.content} />
         </article>
       </main>
       <Footer />

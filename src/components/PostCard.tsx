@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { Calendar, ArrowRight } from "lucide-react";
-import type { Post } from "../data/posts";
+import type { PostSummary } from "../types/api";
 
 interface PostCardProps {
-  post: Post;
+  post: PostSummary;
 }
 
 export default function PostCard({ post }: PostCardProps) {

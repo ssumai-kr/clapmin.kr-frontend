@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import clapminLogo from "../images/clapminLogo.png";
-
 export default function Navbar() {
   return (
     <nav className="fixed left-0 right-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
