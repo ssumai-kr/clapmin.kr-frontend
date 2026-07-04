@@ -1,19 +1,36 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Calendar } from "lucide-react";
-import { apiFetch } from "../lib/api";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { ArrowLeft, Calendar, Trash2 } from "lucide-react";
+import { apiFetch, apiFetchAuth } from "../lib/api";
 import type { PostDetail } from "../types/api";
 import { posts as hardcodedPosts } from "../data/posts";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import MarkdownRenderer from "../components/MarkdownRenderer";
 import LikeButton from "../components/LikeButton";
+import { useAuth } from "../context/AuthContext";
 
 export default function PostPage() {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
+  const { isAuthenticated, token } = useAuth();
   const [post, setPost] = useState<PostDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  async function handleDelete() {
+    if (!post || !window.confirm(`"${post.title}" 포스트를 삭제하시겠습니까?`)) return;
+    setIsDeleting(true);
+    try {
+      const res = await apiFetchAuth(`/api/posts/${post.slug}`, token!, { method: "DELETE" });
+      if (!res.ok) throw new Error();
+      navigate("/");
+    } catch {
+      alert("삭제에 실패했습니다.");
+      setIsDeleting(false);
+    }
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -124,13 +141,25 @@ export default function PostPage() {
     <div className="min-h-screen bg-background">
       <Navbar />
       <main className="mx-auto max-w-3xl px-4 pb-24 pt-28 sm:px-6">
-        <Link
-          to="/"
-          className="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to home
-        </Link>
+        <div className="mb-8 flex items-center justify-between">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to home
+          </Link>
+          {isAuthenticated && post.id > 0 && (
+            <button
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-50"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              {isDeleting ? "삭제 중..." : "삭제"}
+            </button>
+          )}
+        </div>
 
         <header className="mb-12">
           <div className="mb-4 flex flex-wrap gap-1.5">

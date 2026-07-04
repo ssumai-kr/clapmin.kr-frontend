@@ -1,17 +1,25 @@
 import { Link } from "react-router-dom";
-import { Calendar, ArrowRight } from "lucide-react";
+import { Calendar, ArrowRight, Trash2 } from "lucide-react";
 import type { PostSummary } from "../types/api";
 
 interface PostCardProps {
   post: PostSummary;
+  onDelete?: (slug: string) => void;
 }
 
-export default function PostCard({ post }: PostCardProps) {
+export default function PostCard({ post, onDelete }: PostCardProps) {
   const formattedDate = new Date(post.date).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
+
+  function handleDelete(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!window.confirm(`"${post.title}" 포스트를 삭제하시겠습니까?`)) return;
+    onDelete?.(post.slug);
+  }
 
   return (
     <Link to={`/posts/${post.slug}`}>
@@ -19,6 +27,15 @@ export default function PostCard({ post }: PostCardProps) {
         <div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground">
           <Calendar className="h-3.5 w-3.5" />
           <time>{formattedDate}</time>
+          {onDelete && (
+            <button
+              onClick={handleDelete}
+              className="ml-auto rounded p-1 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+              title="삭제"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </button>
+          )}
         </div>
 
         <h2 className="mb-2 font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { PenLine } from "lucide-react";
-import { apiFetch } from "../lib/api";
+import { apiFetch, apiFetchAuth } from "../lib/api";
 import type { PostSummary } from "../types/api";
 import { posts as hardcodedPosts } from "../data/posts";
 import { useAuth } from "../context/AuthContext";
@@ -28,10 +28,19 @@ function mergeWithHardcoded(apiPosts: PostSummary[]): PostSummary[] {
 }
 
 export default function PostList() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, token } = useAuth();
   const [posts, setPosts] = useState<PostSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+
+  async function handleDelete(slug: string) {
+    try {
+      await apiFetchAuth(`/api/posts/${slug}`, token!, { method: "DELETE" });
+      setPosts((prev) => prev.filter((p) => p.slug !== slug));
+    } catch {
+      alert("삭제에 실패했습니다.");
+    }
+  }
 
   useEffect(() => {
     apiFetch("/api/posts")
@@ -90,7 +99,11 @@ export default function PostList() {
       {!loading && posts.length > 0 && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} />
+            <PostCard
+              key={post.id}
+              post={post}
+              onDelete={isAuthenticated && post.id > 0 ? handleDelete : undefined}
+            />
           ))}
         </div>
       )}
