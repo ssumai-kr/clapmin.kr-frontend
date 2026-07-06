@@ -1,4 +1,4 @@
-import { Github, Mail, GraduationCap, Trophy } from "lucide-react";
+import { Github, Mail, GraduationCap, Trophy, Briefcase } from "lucide-react";
 import itsSupportCard from "../images/itssupportcard.png";
 import sapLogo from "../images/sap.png";
 import GitHubContributions from "./GitHubContributions";
@@ -73,6 +73,17 @@ export default function Hero() {
                   <p className="text-muted-foreground">
                     K-PaaS Application Contest · NIA / CCCR
                   </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Career */}
+            <div className="mb-6 flex items-start justify-center gap-2 md:justify-start">
+              <Briefcase className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
+              <div className="space-y-1.5 text-left text-sm">
+                <div>
+                  <p className="font-medium text-foreground">FullStack Engineer</p>
+                  <p className="text-muted-foreground">Depart · 26.07 ~</p>
                 </div>
               </div>
             </div>
