@@ -3,22 +3,23 @@ import type { Project } from "../types/api";
 
 export default function ProjectCard({ project }: { project: Project }) {
   return (
-    <article className="group overflow-hidden rounded-xl border border-border bg-card transition-all duration-200 hover:border-foreground/30 hover:shadow-md">
+    <article className="glow-card group overflow-hidden rounded-xl border border-white/8 bg-card/60 backdrop-blur">
       {project.image_url && (
-        <div className="aspect-video w-full overflow-hidden bg-muted">
+        <div className="relative aspect-video w-full overflow-hidden bg-black/40">
           <img
             src={project.image_url}
             alt={project.title}
-            className={`h-full w-full transition-transform duration-300 group-hover:scale-105 ${
+            className={`h-full w-full transition-transform duration-500 group-hover:scale-105 ${
               project.image_contain ? "object-contain p-4" : "object-cover"
             }`}
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </div>
       )}
 
-      <div className="flex items-center justify-between px-4 py-3">
+      <div className="relative z-[2] flex items-center justify-between px-4 py-3">
         <div className="min-w-0">
-          <h2 className="truncate text-sm font-semibold text-foreground">
+          <h2 className="truncate text-sm font-semibold text-foreground transition-colors group-hover:text-[hsl(var(--brand-1))]">
             {project.title}
           </h2>
           <p className="truncate text-xs text-muted-foreground">

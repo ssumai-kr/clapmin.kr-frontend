@@ -58,19 +58,20 @@ export default function PostList({ limit }: { limit?: number } = {}) {
 
   return (
     <section id="posts">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-bold text-foreground">
-          Posts{" "}
+      <div className="mb-5 flex items-center justify-between">
+        <h2 className="flex items-center gap-3 text-xl font-bold text-foreground">
+          <span className="h-5 w-1 rounded-full bg-gradient-to-b from-[hsl(var(--brand-2))] to-[hsl(var(--brand-1))]" />
+          Posts
           {!loading && !error && (
-            <span className="ml-1 text-sm font-normal text-muted-foreground">
-              {posts.length} articles
+            <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-normal text-muted-foreground">
+              {posts.length}
             </span>
           )}
         </h2>
         {isAuthenticated && (
           <Link
             to="/posts/write"
-            className="flex items-center gap-1.5 rounded-lg bg-foreground px-3 py-1.5 text-xs font-medium text-background transition-opacity hover:opacity-90"
+            className="btn-gradient flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium"
           >
             <PenLine className="h-3.5 w-3.5" />
             글쓰기
@@ -109,13 +110,13 @@ export default function PostList({ limit }: { limit?: number } = {}) {
           </div>
 
           {limit !== undefined && posts.length > limit && (
-            <div className="mt-6 flex justify-center">
+            <div className="mt-7 flex justify-center">
               <Link
                 to="/posts"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                className="group inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-medium text-foreground/90 backdrop-blur transition-all hover:border-[hsl(var(--brand-1)/0.5)] hover:bg-white/10"
               >
-                더보기
-                <ArrowRight className="h-4 w-4" />
+                포스트 더보기
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
           )}

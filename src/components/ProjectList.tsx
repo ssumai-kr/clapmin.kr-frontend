@@ -46,12 +46,13 @@ export default function ProjectList({ limit }: { limit?: number } = {}) {
   }, []);
 
   return (
-    <section id="projects" className="mb-10">
-      <h2 className="mb-4 text-lg font-bold text-foreground">
-        Projects{" "}
+    <section id="projects" className="mb-12">
+      <h2 className="mb-5 flex items-center gap-3 text-xl font-bold text-foreground">
+        <span className="h-5 w-1 rounded-full bg-gradient-to-b from-[hsl(var(--brand-1))] to-[hsl(var(--brand-3))]" />
+        Projects
         {!loading && !error && (
-          <span className="ml-1 text-sm font-normal text-muted-foreground">
-            {projects.length} projects
+          <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-normal text-muted-foreground">
+            {projects.length}
           </span>
         )}
       </h2>
@@ -83,13 +84,13 @@ export default function ProjectList({ limit }: { limit?: number } = {}) {
           </div>
 
           {limit !== undefined && projects.length > limit && (
-            <div className="mt-6 flex justify-center">
+            <div className="mt-7 flex justify-center">
               <Link
                 to="/projects"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                className="group inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-medium text-foreground/90 backdrop-blur transition-all hover:border-[hsl(var(--brand-1)/0.5)] hover:bg-white/10"
               >
-                더보기
-                <ArrowRight className="h-4 w-4" />
+                프로젝트 더보기
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
           )}

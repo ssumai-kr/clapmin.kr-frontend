@@ -23,8 +23,8 @@ export default function PostCard({ post, onDelete }: PostCardProps) {
 
   return (
     <Link to={`/posts/${post.slug}`}>
-      <article className="group cursor-pointer rounded-xl border border-border bg-card p-5 transition-all duration-200 hover:border-foreground/30 hover:shadow-md">
-        <div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground">
+      <article className="glow-card group h-full cursor-pointer rounded-xl border border-white/8 bg-card/60 p-5 backdrop-blur">
+        <div className="relative z-[2] mb-3 flex items-center gap-2 text-xs text-muted-foreground">
           <Calendar className="h-3.5 w-3.5" />
           <time>{formattedDate}</time>
           {onDelete && (
@@ -38,26 +38,26 @@ export default function PostCard({ post, onDelete }: PostCardProps) {
           )}
         </div>
 
-        <h2 className="mb-2 font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">
+        <h2 className="relative z-[2] mb-2 font-semibold leading-snug text-foreground transition-colors group-hover:text-[hsl(var(--brand-1))]">
           {post.title}
         </h2>
 
-        <p className="mb-4 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+        <p className="relative z-[2] mb-4 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
           {post.excerpt}
         </p>
 
-        <div className="flex items-center justify-between">
+        <div className="relative z-[2] flex items-center justify-between">
           <div className="flex flex-wrap gap-1.5">
             {post.tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-md bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground"
+                className="rounded-md border border-white/5 bg-white/5 px-2 py-0.5 text-xs font-medium text-foreground/70"
               >
                 #{tag}
               </span>
             ))}
           </div>
-          <ArrowRight className="ml-2 h-4 w-4 flex-shrink-0 text-muted-foreground transition-all group-hover:translate-x-0.5 group-hover:text-foreground" />
+          <ArrowRight className="ml-2 h-4 w-4 flex-shrink-0 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-[hsl(var(--brand-1))]" />
         </div>
       </article>
     </Link>

@@ -5,6 +5,8 @@ import ProjectList from "./components/ProjectList";
 import PostList from "./components/PostList";
 import MusicSection from "./components/MusicSection";
 import Footer from "./components/Footer";
+import InteractiveBackground from "./components/InteractiveBackground";
+import Reveal from "./components/Reveal";
 import PostPage from "./pages/PostPage";
 import PostsPage from "./pages/PostsPage";
 import ProjectsPage from "./pages/ProjectsPage";
@@ -14,17 +16,24 @@ import { AuthProvider } from "./context/AuthContext";
 
 function Home() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background">
+      <InteractiveBackground />
       <Navbar />
       <Hero />
       <main className="mx-auto max-w-5xl px-4 pb-16 sm:px-6">
         <div className="flex flex-col gap-10 lg:flex-row">
           <div className="min-w-0 flex-1">
-            <ProjectList limit={4} />
-            <PostList limit={4} />
+            <Reveal>
+              <ProjectList limit={4} />
+            </Reveal>
+            <Reveal delay={100}>
+              <PostList limit={4} />
+            </Reveal>
           </div>
           <aside className="w-full flex-shrink-0 lg:w-80">
-            <MusicSection />
+            <Reveal delay={150}>
+              <MusicSection />
+            </Reveal>
           </aside>
         </div>
       </main>

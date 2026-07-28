@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProjectList from "../components/ProjectList";
+import InteractiveBackground from "../components/InteractiveBackground";
 
 export default function ProjectsPage() {
   useEffect(() => {
@@ -11,7 +12,8 @@ export default function ProjectsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background">
+      <InteractiveBackground />
       <Navbar />
       <main className="mx-auto max-w-5xl px-4 pb-24 pt-28 sm:px-6">
         <Link
