@@ -5,15 +5,23 @@ export default function ProjectCard({ project }: { project: Project }) {
   return (
     <article className="glow-card group overflow-hidden rounded-xl border border-white/8 bg-card/60 backdrop-blur">
       {project.image_url && (
-        <div className="relative aspect-video w-full overflow-hidden bg-black/40">
+        <div
+          className={`relative aspect-video w-full overflow-hidden ${
+            project.image_contain
+              ? "bg-gradient-to-br from-zinc-100 to-zinc-300"
+              : "bg-zinc-800"
+          }`}
+        >
           <img
             src={project.image_url}
             alt={project.title}
             className={`h-full w-full transition-transform duration-500 group-hover:scale-105 ${
-              project.image_contain ? "object-contain p-4" : "object-cover"
+              project.image_contain ? "object-contain p-5" : "object-cover"
             }`}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          {!project.image_contain && (
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          )}
         </div>
       )}
 

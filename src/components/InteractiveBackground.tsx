@@ -65,12 +65,12 @@ export default function InteractiveBackground() {
       />
 
       {/* subtle grid + vignette */}
-      <div className="grid-bg absolute inset-0 opacity-60" />
+      <div className="grid-bg absolute inset-0 opacity-50" />
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(120% 80% at 50% 0%, transparent 40%, hsl(240 10% 4% / 0.9) 100%)",
+            "radial-gradient(130% 90% at 50% 0%, transparent 55%, hsl(240 8% 9% / 0.7) 100%)",
         }}
       />
 
