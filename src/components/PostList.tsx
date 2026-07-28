@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { PenLine } from "lucide-react";
+import { PenLine, ArrowRight } from "lucide-react";
 import { apiFetch, apiFetchAuth } from "../lib/api";
 import type { PostSummary } from "../types/api";
 import { posts as hardcodedPosts } from "../data/posts";
@@ -27,7 +27,7 @@ function mergeWithHardcoded(apiPosts: PostSummary[]): PostSummary[] {
   );
 }
 
-export default function PostList() {
+export default function PostList({ limit }: { limit?: number } = {}) {
   const { isAuthenticated, token } = useAuth();
   const [posts, setPosts] = useState<PostSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -97,15 +97,29 @@ export default function PostList() {
       )}
 
       {!loading && posts.length > 0 && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {posts.map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              onDelete={isAuthenticated && post.id > 0 ? handleDelete : undefined}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {(limit ? posts.slice(0, limit) : posts).map((post) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                onDelete={isAuthenticated && post.id > 0 ? handleDelete : undefined}
+              />
+            ))}
+          </div>
+
+          {limit !== undefined && posts.length > limit && (
+            <div className="mt-6 flex justify-center">
+              <Link
+                to="/posts"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              >
+                더보기
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          )}
+        </>
       )}
     </section>
   );

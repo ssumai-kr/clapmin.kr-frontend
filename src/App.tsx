@@ -6,6 +6,8 @@ import PostList from "./components/PostList";
 import MusicSection from "./components/MusicSection";
 import Footer from "./components/Footer";
 import PostPage from "./pages/PostPage";
+import PostsPage from "./pages/PostsPage";
+import ProjectsPage from "./pages/ProjectsPage";
 import LoginPage from "./pages/LoginPage";
 import WritePostPage from "./pages/WritePostPage";
 import { AuthProvider } from "./context/AuthContext";
@@ -18,8 +20,8 @@ function Home() {
       <main className="mx-auto max-w-5xl px-4 pb-16 sm:px-6">
         <div className="flex flex-col gap-10 lg:flex-row">
           <div className="min-w-0 flex-1">
-            <ProjectList />
-            <PostList />
+            <ProjectList limit={4} />
+            <PostList limit={4} />
           </div>
           <aside className="w-full flex-shrink-0 lg:w-80">
             <MusicSection />
@@ -37,6 +39,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/posts" element={<PostsPage />} />
           <Route path="/posts/write" element={<WritePostPage />} />
           <Route path="/posts/:slug" element={<PostPage />} />
           <Route path="/admin/login" element={<LoginPage />} />

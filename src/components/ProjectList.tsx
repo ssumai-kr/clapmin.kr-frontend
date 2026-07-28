@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import { apiFetch } from "../lib/api";
 import type { Project } from "../types/api";
 import { projects as hardcodedProjects } from "../data/projects";
@@ -24,7 +26,7 @@ function mergeWithHardcoded(apiProjects: Project[]): Project[] {
   return [...apiProjects, ...fallbacks].sort((a, b) => a.order - b.order);
 }
 
-export default function ProjectList() {
+export default function ProjectList({ limit }: { limit?: number } = {}) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -73,11 +75,25 @@ export default function ProjectList() {
       )}
 
       {!loading && projects.length > 0 && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {(limit ? projects.slice(0, limit) : projects).map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </div>
+
+          {limit !== undefined && projects.length > limit && (
+            <div className="mt-6 flex justify-center">
+              <Link
+                to="/projects"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              >
+                더보기
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          )}
+        </>
       )}
     </section>
   );

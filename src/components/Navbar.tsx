@@ -12,9 +12,15 @@ export default function Navbar() {
           <Link to="/" className="transition-colors hover:text-foreground">
             Home
           </Link>
-          <a href="/#posts" className="transition-colors hover:text-foreground">
+          <Link
+            to="/projects"
+            className="transition-colors hover:text-foreground"
+          >
+            Projects
+          </Link>
+          <Link to="/posts" className="transition-colors hover:text-foreground">
             Posts
-          </a>
+          </Link>
           <a
             href="mailto:fhsjdvs@gmail.com"
             className="transition-colors hover:text-foreground"
