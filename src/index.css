@@ -5,23 +5,23 @@
 @layer base {
   :root {
     /* Slightly-blue dark base (lifted a touch for less crushing black) */
-    --background: 240 8% 9%;
-    --foreground: 0 0% 98%;
-    --card: 240 7% 13%;
+    --background: 0 0% 9%; /* #171717 */
+    --foreground: 0 0% 100%; /* #FFFFFF */
+    --card: 0 0% 17%; /* #2B2B2B */
     --card-foreground: 0 0% 98%;
-    --popover: 240 8% 11%;
+    --popover: 0 0% 17%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
     --primary-foreground: 240 10% 6%;
     --secondary: 240 6% 18%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 6% 17%;
-    --muted-foreground: 240 5% 70%;
+    --muted: 0 0% 17%;
+    --muted-foreground: 0 0% 60%;
     --accent: 240 6% 18%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5% 22%;
+    --border: 0 0% 100% / 0.06;
     --input: 240 5% 22%;
     --ring: 265 90% 66%;
 
@@ -35,23 +35,23 @@
 
   /* Keep .dark identical so `dark:` variants and libraries stay consistent */
   .dark {
-    --background: 240 8% 9%;
-    --foreground: 0 0% 98%;
-    --card: 240 7% 13%;
+    --background: 0 0% 9%; /* #171717 */
+    --foreground: 0 0% 100%; /* #FFFFFF */
+    --card: 0 0% 17%; /* #2B2B2B */
     --card-foreground: 0 0% 98%;
-    --popover: 240 8% 11%;
+    --popover: 0 0% 17%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
     --primary-foreground: 240 10% 6%;
     --secondary: 240 6% 18%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 6% 17%;
-    --muted-foreground: 240 5% 70%;
+    --muted: 0 0% 17%;
+    --muted-foreground: 0 0% 60%;
     --accent: 240 6% 18%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5% 22%;
+    --border: 0 0% 100% / 0.06;
     --input: 240 5% 22%;
     --ring: 265 90% 66%;
   }
@@ -224,6 +224,36 @@
     opacity: 0.5;
   }
   50% {
+    opacity: 1;
+  }
+}
+
+@keyframes clapmin-intro-in {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+@keyframes clapmin-intro-out {
+  0%,
+  62% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes clapmin-page-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
     opacity: 1;
   }
 }

@@ -9,6 +9,7 @@ export default {
     extend: {
       fontFamily: {
         sans: [
+          "Geist",
           '"Pretendard Variable"',
           "Pretendard",
           "-apple-system",
@@ -16,6 +17,13 @@ export default {
           "system-ui",
           "Roboto",
           "sans-serif",
+        ],
+        mono: [
+          '"Geist Mono"',
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "monospace",
         ],
       },
       borderRadius: {
