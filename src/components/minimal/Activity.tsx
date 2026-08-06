@@ -41,18 +41,20 @@ export default function Activity() {
     <section>
       <h2 className="mb-[18px] text-[13.5px] font-medium text-white">Activity</h2>
       <div className="rounded-2xl border border-white/[0.06] bg-[#2B2B2B] p-4">
-        <div
-          className="grid grid-flow-col justify-between gap-[2.5px]"
-          style={{ gridTemplateRows: "repeat(7, 8px)" }}
-        >
-          {days.map((d) => (
-            <div
-              key={d.date}
-              title={`${d.date} · ${d.contributionCount}`}
-              className="h-2 w-2 rounded-[2px]"
-              style={{ background: shade(d.contributionCount) }}
-            />
-          ))}
+        <div className="overflow-x-auto">
+          <div
+            className="grid w-max grid-flow-col gap-[2px]"
+            style={{ gridTemplateRows: "repeat(7, 8px)" }}
+          >
+            {days.map((d) => (
+              <div
+                key={d.date}
+                title={`${d.date} · ${d.contributionCount}`}
+                className="h-2 w-2 rounded-[2px]"
+                style={{ background: shade(d.contributionCount) }}
+              />
+            ))}
+          </div>
         </div>
         <div className="mt-3.5 flex items-center justify-between text-[11.5px] text-white/35">
           <span>{total} contributions</span>

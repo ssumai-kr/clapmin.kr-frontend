@@ -15,8 +15,8 @@ export default function Projects() {
                   p.imageContain ? "object-contain p-[5px]" : "object-cover"
                 }`}
               />
-              <div className="flex flex-col gap-[3px]">
-                <div className="flex items-center gap-2">
+              <div className="flex min-w-0 flex-col gap-[3px]">
+                <div className="flex flex-wrap items-center gap-2">
                   <span className="text-[13.5px] font-medium text-white">{p.title}</span>
                   {p.liveUrl && (
                     <span className="rounded-full bg-[#2B2B2B] px-[7px] py-0.5 text-[10.5px] text-white/50">
