@@ -7,7 +7,7 @@ export default function Header() {
         <img src={clapminLogo} alt="clapmin" className="h-[22px] w-[22px] rounded-[5px]" />
         <h1 className="text-[15px] font-medium tracking-[-0.01em] text-white">Park Sumin</h1>
       </div>
-      <p className="ml-8 text-[13.5px] text-white/45">Software and ERP Engineer</p>
+      <p className="ml-8 text-[13.5px] text-white/45">Software Engineer</p>
     </header>
   );
 }

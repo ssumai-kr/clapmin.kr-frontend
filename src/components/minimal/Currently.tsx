@@ -9,8 +9,10 @@ export default function Currently() {
     <section>
       <h2 className="mb-3 text-[13.5px] font-medium text-white">Currently</h2>
       <p className="mb-4 text-[13.5px] leading-[1.75] text-white/55 [text-wrap:pretty]">
-        Building web software and SAP ERP systems at Depart. I care about the seam between the
-        interface and the system behind it — how it looks, how it holds up, and how it feels to use.
+        Building web software — interfaces on the front, the APIs and services that carry them on
+        the back. I care about the seam between the two: how it looks, how it holds up under real
+        traffic, and how it feels to use. I sweat the small stuff — motion, load states, the edges
+        of a layout — as much as the architecture underneath it.
       </p>
       <button
         onClick={() => {

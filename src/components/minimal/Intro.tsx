@@ -25,7 +25,7 @@ export default function Intro() {
         className="font-mono text-[11.5px] tracking-[0.14em] text-white/30"
         style={{ animation: "clapmin-intro-in .9s cubic-bezier(.16,1,.3,1) .25s both" }}
       >
-        SOFTWARE AND ERP ENGINEER
+        SOFTWARE ENGINEER
       </span>
     </div>
   );
