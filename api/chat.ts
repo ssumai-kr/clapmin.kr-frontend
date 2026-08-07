@@ -1,11 +1,17 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { SYSTEM_PROMPT } from "./persona";
 import { checkRateLimit, clientIp } from "./ratelimit";
 import { logChat } from "./chatlog";
 
 // Runs as a Vercel Edge Function (Web Streams — clean streaming).
+//
+// The Anthropic API is called over plain fetch rather than @anthropic-ai/sdk:
+// the SDK reaches for node:fs / node:path (to read `ant auth login` profiles),
+// which the Edge runtime doesn't provide, and it ships no edge-specific entry
+// point. Talking to /v1/messages directly keeps this function edge-compatible.
 export const config = { runtime: "edge" };
 
+const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
+const ANTHROPIC_VERSION = "2023-06-01";
 const MODEL = "claude-haiku-4-5";
 const MAX_TOKENS = 800;
 const MAX_HISTORY = 12; // last N turns kept
@@ -86,7 +92,6 @@ export default async function handler(request: Request): Promise<Response> {
   const sid = typeof rawSid === "string" ? rawSid.slice(0, 64) : "unknown";
   const question = messages[messages.length - 1]?.content ?? "";
 
-  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream<Uint8Array>({
@@ -94,26 +99,66 @@ export default async function handler(request: Request): Promise<Response> {
       let answer = "";
       let usage: { in?: number; out?: number } | undefined;
       try {
-        const anthropicStream = client.messages.stream({
-          model: MODEL,
-          max_tokens: MAX_TOKENS,
-          system: SYSTEM_PROMPT,
-          messages,
+        const upstream = await fetch(ANTHROPIC_URL, {
+          method: "POST",
+          headers: {
+            "x-api-key": process.env.ANTHROPIC_API_KEY!,
+            "anthropic-version": ANTHROPIC_VERSION,
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            model: MODEL,
+            max_tokens: MAX_TOKENS,
+            system: SYSTEM_PROMPT,
+            messages,
+            stream: true,
+          }),
         });
-        for await (const event of anthropicStream) {
-          if (
-            event.type === "content_block_delta" &&
-            event.delta.type === "text_delta"
-          ) {
-            answer += event.delta.text;
-            controller.enqueue(encoder.encode(event.delta.text));
+        if (!upstream.ok || !upstream.body) {
+          throw new Error(`anthropic ${upstream.status}`);
+        }
+
+        // Parse the SSE stream, forwarding only the text deltas.
+        const reader = upstream.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+
+          // Keep the trailing partial line for the next chunk.
+          const lines = buffer.split("\n");
+          buffer = lines.pop() ?? "";
+
+          for (const line of lines) {
+            if (!line.startsWith("data:")) continue;
+            const payload = line.slice(5).trim();
+            if (!payload || payload === "[DONE]") continue;
+
+            let evt: any;
+            try {
+              evt = JSON.parse(payload);
+            } catch {
+              continue;
+            }
+
+            if (
+              evt.type === "content_block_delta" &&
+              evt.delta?.type === "text_delta" &&
+              typeof evt.delta.text === "string"
+            ) {
+              answer += evt.delta.text;
+              controller.enqueue(encoder.encode(evt.delta.text));
+            } else if (evt.type === "message_start") {
+              usage = { ...usage, in: evt.message?.usage?.input_tokens };
+            } else if (evt.type === "message_delta") {
+              usage = { ...usage, out: evt.usage?.output_tokens };
+            } else if (evt.type === "error") {
+              throw new Error(evt.error?.type ?? "anthropic stream error");
+            }
           }
         }
-        const final = await anthropicStream.finalMessage();
-        usage = {
-          in: final.usage.input_tokens,
-          out: final.usage.output_tokens,
-        };
       } catch {
         controller.enqueue(
           encoder.encode(
