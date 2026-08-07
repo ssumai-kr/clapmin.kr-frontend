@@ -115,7 +115,7 @@ export default function AskDock() {
             {messages.map((m, i) => (m.text === "" ? null : (
               <div key={i} className="flex items-start gap-2.5">
                 <span className="min-w-[26px] pt-[3px] font-mono text-[10.5px] text-white/30">{m.who}</span>
-                <p className={`text-[13px] leading-[1.7] [text-wrap:pretty] ${m.who === "you" ? "text-white" : "text-white/60"}`}>
+                <p className={`whitespace-pre-wrap text-[13px] leading-[1.7] [text-wrap:pretty] ${m.who === "you" ? "text-white" : "text-white/60"}`}>
                   {m.text}
                 </p>
               </div>
