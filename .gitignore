@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# This project uses pnpm (see package.json#packageManager). Keeping an npm or
+# yarn lockfile around lets the two drift apart, which breaks Vercel's
+# --frozen-lockfile install. Use `pnpm add` to add dependencies.
+package-lock.json
+yarn.lock
+
 # Environment variables
 .env
 .env.local

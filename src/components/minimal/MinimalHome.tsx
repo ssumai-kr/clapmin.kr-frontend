@@ -3,7 +3,7 @@ import Header from "./Header";
 import Currently from "./Currently";
 import Widgets from "./Widgets";
 import Projects from "./Projects";
-import { Experience, Achievements, Education } from "./Resume";
+import { Experience, Achievements, Education, Certification } from "./Resume";
 import Blogs from "./Blogs";
 import TechStack from "./TechStack";
 import Activity from "./Activity";
@@ -26,6 +26,7 @@ export default function MinimalHome() {
           <Experience />
           <Achievements />
           <Education />
+          <Certification />
           <Blogs />
           <TechStack />
           <Activity />

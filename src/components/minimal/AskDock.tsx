@@ -23,22 +23,6 @@ function Sheen({ rounded }: { rounded: string }) {
   );
 }
 
-/** Placeholder answers — swap answer() for your LLM endpoint. */
-function answer(q: string): string {
-  const t = q.toLowerCase();
-  if (/stack|tech|기술|언어/.test(t))
-    return "Mostly TypeScript + React with Vite and Tailwind on the front, Node and REST services behind it, and SAP ERP work at Depart.";
-  if (/project|프로젝트/.test(t))
-    return "Three shipped: SSUPORT (scholarship platform), the Soongsil Student Council site, and grabPT, a PT matching platform.";
-  if (/experience|경력|work|회사/.test(t)) return "FullStack Engineer at Depart since July 2026, in Seoul, onsite.";
-  if (/award|수상|achievement/.test(t))
-    return "Excellence Award at the Soongsil Startup Hackathon, and a Chairman's Award at the K-PaaS Application Contest (NIA · CCCR).";
-  if (/contact|email|메일|연락/.test(t)) return "fhsjdvs@gmail.com — or github.com/ssumai-kr.";
-  if (/education|학력|대학/.test(t))
-    return "Soongsil University — Business Administration and Computer Science and Engineering.";
-  return "That one's not wired up yet. Try asking about his stack, projects, experience, or how to get in touch.";
-}
-
 export default function AskDock() {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
@@ -47,6 +31,13 @@ export default function AskDock() {
     { who: "ai", text: "Hi — I'm Sumin's assistant. Ask me about his work, stack, or projects." },
   ]);
   const inputRef = useRef<HTMLInputElement>(null);
+  // Random per-visit id so log entries can be grouped into a conversation.
+  // Not tied to the visitor — regenerated on every page load.
+  const sidRef = useRef<string>(
+    typeof crypto !== "undefined" && crypto.randomUUID
+      ? crypto.randomUUID()
+      : Math.random().toString(36).slice(2),
+  );
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -61,17 +52,69 @@ export default function AskDock() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  function send(q: string) {
+  async function send(q: string) {
     const text = q.trim();
     if (!text || busy) return;
     setOpen(true);
     setDraft("");
     setBusy(true);
-    setMessages((m) => [...m, { who: "you", text }]);
-    setTimeout(() => {
+
+    // Build the API history, then drop the seeded greeting so it starts with "user".
+    const history = [...messages, { who: "you" as const, text }].map((m) => ({
+      role: m.who === "you" ? ("user" as const) : ("assistant" as const),
+      content: m.text,
+    }));
+    while (history.length && history[0].role === "assistant") history.shift();
+
+    // Show the user's message + an empty assistant bubble to stream into.
+    setMessages((m) => [...m, { who: "you", text }, { who: "ai", text: "" }]);
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: history, sid: sidRef.current }),
+      });
+      if (res.status === 429) {
+        const info = await res.json().catch(() => null);
+        const msg =
+          info?.scope === "daily"
+            ? "오늘 질문 한도를 다 쓰셨어요. 더 궁금한 점은 fhsjdvs@gmail.com 으로 보내주세요."
+            : "질문이 너무 빨라요. 잠시 후 다시 시도해 주세요.";
+        setMessages((m) => {
+          const copy = [...m];
+          copy[copy.length - 1] = { who: "ai", text: msg };
+          return copy;
+        });
+        return;
+      }
+      if (!res.ok || !res.body) throw new Error("bad response");
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let acc = "";
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        acc += decoder.decode(value, { stream: true });
+        setMessages((m) => {
+          const copy = [...m];
+          copy[copy.length - 1] = { who: "ai", text: acc };
+          return copy;
+        });
+      }
+    } catch {
+      setMessages((m) => {
+        const copy = [...m];
+        copy[copy.length - 1] = {
+          who: "ai",
+          text: "지금 답변을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.",
+        };
+        return copy;
+      });
+    } finally {
       setBusy(false);
-      setMessages((m) => [...m, { who: "ai", text: answer(text) }]);
-    }, 420);
+    }
   }
 
   return (
@@ -89,15 +132,17 @@ export default function AskDock() {
                 esc
               </button>
             </div>
-            {messages.map((m, i) => (
+            {messages.map((m, i) => (m.text === "" ? null : (
               <div key={i} className="flex items-start gap-2.5">
                 <span className="min-w-[26px] pt-[3px] font-mono text-[10.5px] text-white/30">{m.who}</span>
-                <p className={`text-[13px] leading-[1.7] [text-wrap:pretty] ${m.who === "you" ? "text-white" : "text-white/60"}`}>
+                <p className={`whitespace-pre-wrap text-[13px] leading-[1.7] [text-wrap:pretty] ${m.who === "you" ? "text-white" : "text-white/60"}`}>
                   {m.text}
                 </p>
               </div>
-            ))}
-            {busy && <span className="pl-9 text-[13px] text-white/35">…</span>}
+            )))}
+            {busy && messages[messages.length - 1]?.text === "" && (
+              <span className="pl-9 text-[13px] text-white/35">…</span>
+            )}
             {messages.length < 2 && (
               <div className="flex flex-wrap gap-1.5">
                 {SUGGESTIONS.map((s) => (
@@ -142,6 +187,13 @@ export default function AskDock() {
             ↑
           </button>
         </form>
+
+        {/* Data-collection notice. Remove this <p> if you stop logging chats. */}
+        {open && (
+          <p className="px-1 text-center text-[10.5px] leading-relaxed text-white/30">
+            대화는 서비스 개선을 위해 저장될 수 있어요. 개인정보는 입력하지 말아주세요.
+          </p>
+        )}
       </div>
     </div>
   );

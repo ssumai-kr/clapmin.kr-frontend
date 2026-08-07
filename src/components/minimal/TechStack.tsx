@@ -1,7 +1,33 @@
 const groups: { label: string; items: string[] }[] = [
-  { label: "Frontend", items: ["TypeScript", "React", "Vite", "Tailwind CSS", "React Router", "GSAP", "OGL"] },
-  { label: "Backend & ERP", items: ["SAP ERP", "Node.js", "REST API"] },
-  { label: "Tools", items: ["Git", "GitHub", "pnpm", "Vercel", "ESLint", "Prettier", "Figma"] },
+  {
+    label: "Frontend",
+    items: [
+      "TypeScript",
+      "JavaScript",
+      "React",
+      "Next.js",
+      "Tailwind CSS",
+      "TanStack Query",
+      "Zustand",
+      "Jotai",
+      "React Hook Form",
+      "Zod",
+      "Emotion",
+      "Axios",
+    ],
+  },
+  {
+    label: "Infra & Analytics",
+    items: ["AWS S3", "CloudFront", "Cognito", "GitHub Actions", "Vercel", "GA4", "Mixpanel"],
+  },
+  {
+    label: "Languages & ERP",
+    items: ["ABAP", "Python", "Java", "C++"],
+  },
+  {
+    label: "Tools",
+    items: ["Git", "GitHub", "Turborepo", "Vite", "ESLint", "Prettier", "Figma"],
+  },
 ];
 
 export default function TechStack() {

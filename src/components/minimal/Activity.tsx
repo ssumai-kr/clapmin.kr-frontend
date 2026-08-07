@@ -4,8 +4,19 @@ interface Day { date: string; contributionCount: number }
 interface Week { contributionDays: Day[] }
 
 const USERNAME = "ssumai-kr";
-const YEAR = new Date().getFullYear();
-const QUERY = `query { user(login: "${USERNAME}") { contributionsCollection(from: "${YEAR}-01-01T00:00:00Z", to: "${YEAR}-12-31T23:59:59Z") { contributionCalendar { totalContributions weeks { contributionDays { date contributionCount } } } } } }`;
+
+/**
+ * Rolling last-52-weeks window, like GitHub's own graph — today is always the
+ * rightmost column. A Jan 1 – Dec 31 window instead leaves every future day of
+ * the year as an empty cell, which reads as "the graph stopped updating".
+ */
+function windowRange() {
+  const to = new Date();
+  const from = new Date(to);
+  from.setDate(from.getDate() - 364);
+  from.setDate(from.getDate() - from.getDay()); // back to Sunday so weeks align
+  return { from: from.toISOString(), to: to.toISOString() };
+}
 
 /** Monochrome contribution grid — same GitHub GraphQL source as the old widget. */
 function shade(n: number) {
@@ -23,10 +34,12 @@ export default function Activity() {
   useEffect(() => {
     const token = import.meta.env.VITE_GITHUB_TOKEN;
     if (!token) return;
+    const { from, to } = windowRange();
+    const query = `query { user(login: "${USERNAME}") { contributionsCollection(from: "${from}", to: "${to}") { contributionCalendar { totalContributions weeks { contributionDays { date contributionCount } } } } } }`;
     fetch("https://api.github.com/graphql", {
       method: "POST",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ query: QUERY }),
+      body: JSON.stringify({ query }),
     })
       .then((r) => r.json())
       .then((d) => {
@@ -57,7 +70,7 @@ export default function Activity() {
           </div>
         </div>
         <div className="mt-3.5 flex items-center justify-between text-[11.5px] text-white/35">
-          <span>{total} contributions</span>
+          <span>{total} contributions in the last year</span>
           <div className="flex items-center gap-1">
             <span>Less</span>
             {[0, 2, 6, 10, 14].map((n) => (
