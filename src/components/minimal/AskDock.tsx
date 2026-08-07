@@ -68,6 +68,19 @@ export default function AskDock() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: history }),
       });
+      if (res.status === 429) {
+        const info = await res.json().catch(() => null);
+        const msg =
+          info?.scope === "daily"
+            ? "오늘 질문 한도를 다 쓰셨어요. 더 궁금한 점은 fhsjdvs@gmail.com 으로 보내주세요."
+            : "질문이 너무 빨라요. 잠시 후 다시 시도해 주세요.";
+        setMessages((m) => {
+          const copy = [...m];
+          copy[copy.length - 1] = { who: "ai", text: msg };
+          return copy;
+        });
+        return;
+      }
       if (!res.ok || !res.body) throw new Error("bad response");
 
       const reader = res.body.getReader();
