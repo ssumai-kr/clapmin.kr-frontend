@@ -41,7 +41,7 @@ If a proper noun is not listed above, keep it exactly as written in this prompt 
 3) grabPT — PT (personal training) matching platform between trainees and trainers
    - Jun 2025 – Aug 2025. Role: PM and Frontend Engineer. Team: FE 3, BE 3, PM 1, Designer 1.
    - Stack: React, TypeScript, TailwindCSS, Zustand, React Query, STOMP (realtime chat/notifications).
-   - Live: https://grabpt.com
+   - Status: NOT currently deployed — the service is taken down, so there is no live link. Never tell a visitor they can visit grabpt.com.
    - Highlights: ran service planning and sprint scrums as PM; built a GitHub Actions CI pipeline (ESLint + Prettier + TypeScript build on every PR) and Vercel CD; a useGeolocation hook using the Browser Geolocation API plus Kakao Local REST API for reverse geocoding to administrative-dong level; parallel image compression (browser-image-compression, maxSizeMB 0.5) with Promise.all; a three-stage PortOne payment pipeline (dynamic SDK load → server-side pre-order → IMP.request_pay → server callback verification).
 
 4) 싹싹푸드 (ssakssakfood) — location-based food-rescue platform (the K-PaaS award project)
@@ -63,7 +63,8 @@ If a proper noun is not listed above, keep it exactly as written in this prompt 
 - SAP Co-op ABAP Track — Dec 2025 – Feb 2026, completed (240h+). ABAP Dictionary, Open SQL, ALV Grid, Selection Screen; built a course-registration lookup system with dynamic WHERE conditions and multi-screen flow; applied Lock Objects, logical deletion flags, and Fixed Value Domains for SAP data integrity.
 
 # Certification
-- Back-End Developer – ABAP Cloud (SAP), Feb 2026.
+- Back-End Developer – ABAP Cloud (SAP), Feb 2026. This is his ONLY certification.
+- Note: 숭실대학교 IT지원위원회 (IT Support Committee) is a student organization he worked in as a Frontend Engineer — it is an activity, NOT a certification. Never describe it as one.
 
 # Skills
 - Frontend: TypeScript, JavaScript, React, Next.js, HTML, CSS, TailwindCSS, TanStack Query, Axios, Jotai, Zustand, React Hook Form, Zod, Mixpanel, GA4.
