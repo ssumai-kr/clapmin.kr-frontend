@@ -31,6 +31,13 @@ export default function AskDock() {
     { who: "ai", text: "Hi — I'm Sumin's assistant. Ask me about his work, stack, or projects." },
   ]);
   const inputRef = useRef<HTMLInputElement>(null);
+  // Random per-visit id so log entries can be grouped into a conversation.
+  // Not tied to the visitor — regenerated on every page load.
+  const sidRef = useRef<string>(
+    typeof crypto !== "undefined" && crypto.randomUUID
+      ? crypto.randomUUID()
+      : Math.random().toString(36).slice(2),
+  );
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -66,7 +73,7 @@ export default function AskDock() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: history }),
+        body: JSON.stringify({ messages: history, sid: sidRef.current }),
       });
       if (res.status === 429) {
         const info = await res.json().catch(() => null);
@@ -180,6 +187,13 @@ export default function AskDock() {
             ↑
           </button>
         </form>
+
+        {/* Data-collection notice. Remove this <p> if you stop logging chats. */}
+        {open && (
+          <p className="px-1 text-center text-[10.5px] leading-relaxed text-white/30">
+            대화는 서비스 개선을 위해 저장될 수 있어요. 개인정보는 입력하지 말아주세요.
+          </p>
+        )}
       </div>
     </div>
   );

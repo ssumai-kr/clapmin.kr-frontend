@@ -71,23 +71,29 @@ function sweepMemory() {
 
 export async function checkRateLimit(ip: string): Promise<RateLimitResult> {
   if (redisLimiters) {
-    const burst = await redisLimiters.burst.limit(ip);
-    if (!burst.success) {
-      return {
-        success: false,
-        scope: "burst",
-        retryAfter: Math.max(1, Math.ceil((burst.reset - Date.now()) / 1000)),
-      };
+    try {
+      const burst = await redisLimiters.burst.limit(ip);
+      if (!burst.success) {
+        return {
+          success: false,
+          scope: "burst",
+          retryAfter: Math.max(1, Math.ceil((burst.reset - Date.now()) / 1000)),
+        };
+      }
+      const daily = await redisLimiters.daily.limit(ip);
+      if (!daily.success) {
+        return {
+          success: false,
+          scope: "daily",
+          retryAfter: Math.max(1, Math.ceil((daily.reset - Date.now()) / 1000)),
+        };
+      }
+      return { success: true, scope: null, retryAfter: 0 };
+    } catch {
+      // Redis unreachable (outage, bad credentials). Don't take the chatbot
+      // down with it — fall through to the in-memory limiter so requests still
+      // get *some* protection instead of none.
     }
-    const daily = await redisLimiters.daily.limit(ip);
-    if (!daily.success) {
-      return {
-        success: false,
-        scope: "daily",
-        retryAfter: Math.max(1, Math.ceil((daily.reset - Date.now()) / 1000)),
-      };
-    }
-    return { success: true, scope: null, retryAfter: 0 };
   }
 
   sweepMemory();

@@ -1,6 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { SYSTEM_PROMPT } from "./persona";
 import { checkRateLimit, clientIp } from "./ratelimit";
+import { logChat } from "./chatlog";
 
 // Runs as a Vercel Edge Function (Web Streams — clean streaming).
 export const config = { runtime: "edge" };
@@ -79,11 +80,19 @@ export default async function handler(request: Request): Promise<Response> {
     return json({ error: "No valid messages" }, 400);
   }
 
+  // Random, client-generated conversation id. Used only to group log entries —
+  // it is not tied to the visitor's IP or identity.
+  const rawSid = (payload as { sid?: unknown })?.sid;
+  const sid = typeof rawSid === "string" ? rawSid.slice(0, 64) : "unknown";
+  const question = messages[messages.length - 1]?.content ?? "";
+
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
+      let answer = "";
+      let usage: { in?: number; out?: number } | undefined;
       try {
         const anthropicStream = client.messages.stream({
           model: MODEL,
@@ -96,9 +105,15 @@ export default async function handler(request: Request): Promise<Response> {
             event.type === "content_block_delta" &&
             event.delta.type === "text_delta"
           ) {
+            answer += event.delta.text;
             controller.enqueue(encoder.encode(event.delta.text));
           }
         }
+        const final = await anthropicStream.finalMessage();
+        usage = {
+          in: final.usage.input_tokens,
+          out: final.usage.output_tokens,
+        };
       } catch {
         controller.enqueue(
           encoder.encode(
@@ -106,6 +121,17 @@ export default async function handler(request: Request): Promise<Response> {
           ),
         );
       } finally {
+        // Logged after the text has already been streamed, so it costs the
+        // visitor no waiting. Never throws (logChat swallows its own errors).
+        if (answer) {
+          await logChat({
+            ts: new Date().toISOString(),
+            sid,
+            q: question,
+            a: answer,
+            tokens: usage,
+          });
+        }
         controller.close();
       }
     },
