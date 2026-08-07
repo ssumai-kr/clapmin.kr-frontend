@@ -23,22 +23,6 @@ function Sheen({ rounded }: { rounded: string }) {
   );
 }
 
-/** Placeholder answers — swap answer() for your LLM endpoint. */
-function answer(q: string): string {
-  const t = q.toLowerCase();
-  if (/stack|tech|기술|언어/.test(t))
-    return "Mostly TypeScript + React with Vite and Tailwind on the front, Node and REST services behind it, and SAP ERP work at Depart.";
-  if (/project|프로젝트/.test(t))
-    return "Three shipped: SSUPORT (scholarship platform), the Soongsil Student Council site, and grabPT, a PT matching platform.";
-  if (/experience|경력|work|회사/.test(t)) return "FullStack Engineer at Depart since July 2026, in Seoul, onsite.";
-  if (/award|수상|achievement/.test(t))
-    return "Excellence Award at the Soongsil Startup Hackathon, and a Chairman's Award at the K-PaaS Application Contest (NIA · CCCR).";
-  if (/contact|email|메일|연락/.test(t)) return "fhsjdvs@gmail.com — or github.com/ssumai-kr.";
-  if (/education|학력|대학/.test(t))
-    return "Soongsil University — Business Administration and Computer Science and Engineering.";
-  return "That one's not wired up yet. Try asking about his stack, projects, experience, or how to get in touch.";
-}
-
 export default function AskDock() {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
@@ -61,17 +45,56 @@ export default function AskDock() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  function send(q: string) {
+  async function send(q: string) {
     const text = q.trim();
     if (!text || busy) return;
     setOpen(true);
     setDraft("");
     setBusy(true);
-    setMessages((m) => [...m, { who: "you", text }]);
-    setTimeout(() => {
+
+    // Build the API history, then drop the seeded greeting so it starts with "user".
+    const history = [...messages, { who: "you" as const, text }].map((m) => ({
+      role: m.who === "you" ? ("user" as const) : ("assistant" as const),
+      content: m.text,
+    }));
+    while (history.length && history[0].role === "assistant") history.shift();
+
+    // Show the user's message + an empty assistant bubble to stream into.
+    setMessages((m) => [...m, { who: "you", text }, { who: "ai", text: "" }]);
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: history }),
+      });
+      if (!res.ok || !res.body) throw new Error("bad response");
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let acc = "";
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        acc += decoder.decode(value, { stream: true });
+        setMessages((m) => {
+          const copy = [...m];
+          copy[copy.length - 1] = { who: "ai", text: acc };
+          return copy;
+        });
+      }
+    } catch {
+      setMessages((m) => {
+        const copy = [...m];
+        copy[copy.length - 1] = {
+          who: "ai",
+          text: "지금 답변을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.",
+        };
+        return copy;
+      });
+    } finally {
       setBusy(false);
-      setMessages((m) => [...m, { who: "ai", text: answer(text) }]);
-    }, 420);
+    }
   }
 
   return (
@@ -89,15 +112,17 @@ export default function AskDock() {
                 esc
               </button>
             </div>
-            {messages.map((m, i) => (
+            {messages.map((m, i) => (m.text === "" ? null : (
               <div key={i} className="flex items-start gap-2.5">
                 <span className="min-w-[26px] pt-[3px] font-mono text-[10.5px] text-white/30">{m.who}</span>
                 <p className={`text-[13px] leading-[1.7] [text-wrap:pretty] ${m.who === "you" ? "text-white" : "text-white/60"}`}>
                   {m.text}
                 </p>
               </div>
-            ))}
-            {busy && <span className="pl-9 text-[13px] text-white/35">…</span>}
+            )))}
+            {busy && messages[messages.length - 1]?.text === "" && (
+              <span className="pl-9 text-[13px] text-white/35">…</span>
+            )}
             {messages.length < 2 && (
               <div className="flex flex-wrap gap-1.5">
                 {SUGGESTIONS.map((s) => (
