@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "format": "prettier --write src",
     "prettier": "prettier",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "logs": "node --env-file=.env scripts/read-logs.mjs"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.19",
