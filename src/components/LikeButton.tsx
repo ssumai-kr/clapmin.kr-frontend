@@ -29,13 +29,13 @@ export default function LikeButton({ slug, initialCount }: Props) {
   return (
     <button
       onClick={toggle}
-      className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors ${
+      className={`flex items-center gap-1.5 rounded-full border px-[9px] py-[3px] text-[12px] transition-colors ${
         liked
-          ? "border-pink-500 text-pink-500"
-          : "border-border text-muted-foreground hover:border-pink-400 hover:text-pink-400"
+          ? "border-white/[0.06] bg-[#2B2B2B] text-white/80"
+          : "border-white/[0.06] bg-[#2B2B2B] text-white/45 hover:text-white/80"
       }`}
     >
-      <Heart className={`h-4 w-4 ${liked ? "fill-pink-500" : ""}`} />
+      <Heart className={`h-3 w-3 ${liked ? "fill-current" : ""}`} />
       {count}
     </button>
   );

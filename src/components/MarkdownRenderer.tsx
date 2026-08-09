@@ -4,32 +4,31 @@ import type { Components } from "react-markdown";
 
 const mdComponents: Components = {
   h2: ({ children }) => (
-    <h2 className="mb-5 mt-14 border-b border-border pb-3 text-2xl font-bold tracking-tight text-foreground first:mt-0">
+    <h2 className="mb-5 mt-14 border-b border-white/[0.07] pb-3 text-[18px] font-medium tracking-[-0.01em] text-white first:mt-0">
       {children}
     </h2>
   ),
   h3: ({ children }) => (
-    <h3 className="mb-3 mt-10 flex items-center gap-2.5 text-lg font-bold text-foreground">
-      <span className="h-5 w-1 flex-shrink-0 rounded-full bg-foreground" />
+    <h3 className="mb-3 mt-10 text-[15.5px] font-medium text-white">
       {children}
     </h3>
   ),
   h4: ({ children }) => (
-    <h4 className="mb-2 mt-6 text-base font-semibold text-foreground">
+    <h4 className="mb-2 mt-6 text-[14px] font-medium text-white/85">
       {children}
     </h4>
   ),
   p: ({ children }) => (
-    <p className="mb-5 text-base leading-[1.9] text-foreground/75">
+    <p className="mb-5 text-[14.5px] leading-[1.85] text-white/60 [text-wrap:pretty]">
       {children}
     </p>
   ),
   ul: ({ children }) => <ul className="my-5 space-y-2">{children}</ul>,
   ol: ({ children }) => <ol className="my-5 space-y-2">{children}</ol>,
   li: ({ children }) => (
-    <li className="flex items-start gap-3 text-base leading-relaxed text-foreground/75">
-      <span className="mt-2.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-muted-foreground" />
-      <span>{children}</span>
+    <li className="flex items-start gap-3 text-[14.5px] leading-[1.8] text-white/60">
+      <span className="mt-[10px] h-1 w-1 flex-shrink-0 rounded-full bg-white/30" />
+      <span className="min-w-0">{children}</span>
     </li>
   ),
   code: ({ children }) => {
@@ -74,21 +73,21 @@ const mdComponents: Components = {
     </div>
   ),
   thead: ({ children }) => (
-    <thead className="bg-foreground text-background">{children}</thead>
+    <thead className="bg-[#2B2B2B] text-white/70">{children}</thead>
   ),
   tbody: ({ children }) => (
-    <tbody className="divide-y divide-border">{children}</tbody>
+    <tbody className="divide-y divide-white/[0.07]">{children}</tbody>
   ),
   tr: ({ children }) => (
-    <tr className="transition-colors hover:bg-muted/40">{children}</tr>
+    <tr className="transition-colors hover:bg-white/[0.03]">{children}</tr>
   ),
   th: ({ children }) => (
-    <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wider">
+    <th className="whitespace-nowrap px-4 py-3 text-left font-mono text-[11px] font-normal uppercase tracking-[0.12em]">
       {children}
     </th>
   ),
   td: ({ children }) => (
-    <td className="px-5 py-3.5 text-foreground/75">{children}</td>
+    <td className="px-4 py-3 text-[13.5px] text-white/60">{children}</td>
   ),
   strong: ({ children }) => (
     <strong className="font-semibold text-foreground">{children}</strong>
