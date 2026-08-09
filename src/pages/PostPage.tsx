@@ -1,14 +1,32 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Calendar, Trash2 } from "lucide-react";
+import { ArrowLeft, Trash2 } from "lucide-react";
 import { apiFetch, apiFetchAuth } from "../lib/api";
 import type { PostDetail } from "../types/api";
 import { posts as hardcodedPosts } from "../data/posts";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import MarkdownRenderer from "../components/MarkdownRenderer";
 import LikeButton from "../components/LikeButton";
+import QuoteFooter from "../components/minimal/QuoteFooter";
+import AskDock from "../components/minimal/AskDock";
 import { useAuth } from "../context/AuthContext";
+
+/** 홈·목록 페이지와 같은 톤의 껍데기. */
+function Shell({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <div
+        className="min-h-screen bg-[#171717] px-6 pb-[140px] pt-16 sm:pt-24"
+        style={{ animation: "clapmin-page-in .5s ease both" }}
+      >
+        <div className="mx-auto flex max-w-[680px] flex-col gap-14">{children}</div>
+      </div>
+      <AskDock />
+    </>
+  );
+}
+
+const backLink =
+  "inline-flex w-fit items-center gap-1.5 text-[12.5px] text-white/40 transition-colors hover:text-white";
 
 export default function PostPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -104,30 +122,23 @@ export default function PostPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <div className="flex justify-center pt-48">
-          <div className="h-5 w-5 animate-spin rounded-full border-2 border-border border-t-foreground" />
-        </div>
-      </div>
+      <Shell>
+        <p className="text-[13px] text-white/35">loading…</p>
+      </Shell>
     );
   }
 
   if (notFound || !post) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <main className="mx-auto max-w-3xl px-4 pb-16 pt-28 sm:px-6">
-          <p className="text-muted-foreground">Post not found.</p>
-          <Link
-            to="/"
-            className="mt-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to home
+      <Shell>
+        <div className="flex flex-col gap-4">
+          <p className="text-[13.5px] text-white/45">Post not found.</p>
+          <Link to="/posts" className={backLink}>
+            <ArrowLeft className="h-3.5 w-3.5" />
+            back to posts
           </Link>
-        </main>
-      </div>
+        </div>
+      </Shell>
     );
   }
 
@@ -138,22 +149,18 @@ export default function PostPage() {
   });
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <main className="mx-auto max-w-3xl px-4 pb-24 pt-28 sm:px-6">
-        <div className="mb-8 flex items-center justify-between">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to home
+    <Shell>
+      <header className="flex flex-col gap-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <Link to="/posts" className={backLink}>
+            <ArrowLeft className="h-3.5 w-3.5" />
+            back to posts
           </Link>
           {isAuthenticated && post.id > 0 && (
             <button
               onClick={handleDelete}
               disabled={isDeleting}
-              className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 text-[12.5px] text-white/40 transition-colors hover:text-white disabled:opacity-50"
             >
               <Trash2 className="h-3.5 w-3.5" />
               {isDeleting ? "삭제 중..." : "삭제"}
@@ -161,38 +168,39 @@ export default function PostPage() {
           )}
         </div>
 
-        <header className="mb-12">
-          <div className="mb-4 flex flex-wrap gap-1.5">
+        {post.tags.length > 0 && (
+          <div className="flex flex-wrap gap-[7px]">
             {post.tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-md bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground"
+                className="rounded-full border border-white/[0.06] bg-[#2B2B2B] px-[9px] py-[3px] font-mono text-[11px] text-white/60"
               >
                 #{tag}
               </span>
             ))}
           </div>
-          <h1 className="mb-5 text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl">
-            {post.title}
-          </h1>
-          <p className="mb-4 text-base leading-relaxed text-muted-foreground">
-            {post.excerpt}
-          </p>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-3.5 w-3.5" />
-              <time>{formattedDate}</time>
-            </div>
-            <span>조회 {post.view_count.toLocaleString()}</span>
-            <LikeButton slug={post.slug} initialCount={post.like_count} />
-          </div>
-        </header>
+        )}
 
-        <article>
-          <MarkdownRenderer content={post.content} />
-        </article>
-      </main>
-      <Footer />
-    </div>
+        <h1 className="text-[22px] font-medium leading-[1.35] tracking-[-0.01em] text-white [text-wrap:pretty] sm:text-[26px]">
+          {post.title}
+        </h1>
+
+        <p className="text-[13.5px] leading-[1.75] text-white/45 [text-wrap:pretty]">
+          {post.excerpt}
+        </p>
+
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/[0.07] pt-4 text-[12px] text-white/35">
+          <time>{formattedDate}</time>
+          <span>조회 {post.view_count.toLocaleString()}</span>
+          <LikeButton slug={post.slug} initialCount={post.like_count} />
+        </div>
+      </header>
+
+      <article>
+        <MarkdownRenderer content={post.content} />
+      </article>
+
+      <QuoteFooter />
+    </Shell>
   );
 }
