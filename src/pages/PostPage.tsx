@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Trash2 } from "lucide-react";
+import { ArrowLeft, Pencil, Trash2 } from "lucide-react";
 import { apiFetch, apiFetchAuth } from "../lib/api";
 import type { PostDetail } from "../types/api";
 import { posts as hardcodedPosts } from "../data/posts";
@@ -157,14 +157,23 @@ export default function PostPage() {
             back to posts
           </Link>
           {isAuthenticated && post.id > 0 && (
-            <button
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className="inline-flex items-center gap-1.5 text-[12.5px] text-white/40 transition-colors hover:text-white disabled:opacity-50"
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-              {isDeleting ? "삭제 중..." : "삭제"}
-            </button>
+            <div className="flex items-center gap-4">
+              <Link
+                to={`/posts/${post.slug}/edit`}
+                className="inline-flex items-center gap-1.5 text-[12.5px] text-white/40 transition-colors hover:text-white"
+              >
+                <Pencil className="h-3.5 w-3.5" />
+                수정
+              </Link>
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="inline-flex items-center gap-1.5 text-[12.5px] text-white/40 transition-colors hover:text-white disabled:opacity-50"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                {isDeleting ? "삭제 중..." : "삭제"}
+              </button>
+            </div>
           )}
         </div>
 
