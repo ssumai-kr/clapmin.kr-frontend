@@ -1,6 +1,18 @@
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import remarkGfm from "remark-gfm";
-import type { Components } from "react-markdown";
+import type { Components, UrlTransform } from "react-markdown";
+
+/**
+ * 기본 urlTransform은 http(s)·mailto 등만 통과시키고 `data:`는 빈 문자열로 지운다.
+ * 에디터가 붙여넣은 이미지를 data URI로 인라인하므로 img의 src에 한해 허용한다.
+ * (script가 실행되지 않는 <img> 컨텍스트라 svg data URI도 안전하다.)
+ */
+const urlTransform: UrlTransform = (value, key, node) => {
+  if (key === "src" && node.tagName === "img" && /^data:image\//i.test(value)) {
+    return value;
+  }
+  return defaultUrlTransform(value);
+};
 
 const mdComponents: Components = {
   h2: ({ children }) => (
@@ -52,6 +64,15 @@ const mdComponents: Components = {
         {children}
       </pre>
     </div>
+  ),
+  img: ({ src, alt, title }) => (
+    <img
+      src={typeof src === "string" ? src : undefined}
+      alt={alt ?? ""}
+      title={title}
+      loading="lazy"
+      className="my-7 block h-auto w-full rounded-xl border border-white/[0.07]"
+    />
   ),
   blockquote: ({ children }) => (
     <blockquote className="my-6 rounded-r-lg border-l-4 border-foreground/30 bg-muted/40 px-5 py-4 text-muted-foreground">
@@ -106,7 +127,11 @@ const mdComponents: Components = {
 
 export default function MarkdownRenderer({ content }: { content: string }) {
   return (
-    <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={mdComponents}
+      urlTransform={urlTransform}
+    >
       {content}
     </ReactMarkdown>
   );
