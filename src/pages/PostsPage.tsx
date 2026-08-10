@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { PenLine, Trash2 } from "lucide-react";
+import { PenLine, Pencil, Trash2 } from "lucide-react";
 import type { PostSummary } from "../types/api";
 import { fetchPosts, formatDate } from "../lib/content";
 import { apiFetchAuth } from "../lib/api";
@@ -88,13 +88,22 @@ export default function PostsPage() {
                   </span>
                 </Link>
                 {isAuthenticated && post.id > 0 && (
-                  <button
-                    onClick={() => handleDelete(post)}
-                    aria-label={`${post.title} 삭제`}
-                    className="flex-shrink-0 p-1 text-white/25 transition-colors hover:text-white/70"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
+                  <div className="flex flex-shrink-0 items-center gap-1">
+                    <Link
+                      to={`/posts/${post.slug}/edit`}
+                      aria-label={`${post.title} 수정`}
+                      className="p-1 text-white/25 transition-colors hover:text-white/70"
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(post)}
+                      aria-label={`${post.title} 삭제`}
+                      className="p-1 text-white/25 transition-colors hover:text-white/70"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
                 )}
               </article>
             ))}

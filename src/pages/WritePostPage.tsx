@@ -1,8 +1,9 @@
 import { useRef, useEffect, FormEvent } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { ArrowLeft, Send } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { apiFetchAuth } from "../lib/api";
+import { apiFetch, apiFetchAuth } from "../lib/api";
+import type { PostDetail } from "../types/api";
 import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "@toast-ui/editor/dist/theme/toastui-editor-dark.css";
@@ -24,6 +25,8 @@ function todayString(): string {
 export default function WritePostPage() {
   const { isAuthenticated, token } = useAuth();
   const navigate = useNavigate();
+  const { slug: editSlug } = useParams<{ slug?: string }>();
+  const isEditMode = Boolean(editSlug);
   const editorRef = useRef<InstanceType<typeof Editor>>(null);
 
   useEffect(() => {
@@ -32,23 +35,57 @@ export default function WritePostPage() {
 
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
-  const [slugEdited, setSlugEdited] = useState(false);
+  // 수정 모드에서는 기존 slug를 그대로 유지 — 제목 변경으로 URL이 바뀌면 안 되므로.
+  const [slugEdited, setSlugEdited] = useState(isEditMode);
   const [excerpt, setExcerpt] = useState("");
+  const [content, setContent] = useState("");
   const [date, setDate] = useState(todayString());
   const [tags, setTags] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [ready, setReady] = useState(!isEditMode);
 
   useEffect(() => {
     if (!slugEdited) setSlug(toSlug(title));
   }, [title, slugEdited]);
 
+  // 수정 모드: 기존 글을 불러와 폼을 채운다.
+  useEffect(() => {
+    if (!isEditMode) return;
+    let cancelled = false;
+
+    apiFetch(`/api/posts/${editSlug}`)
+      .then((res) => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .then((post: PostDetail) => {
+        if (cancelled) return;
+        setTitle(post.title);
+        setSlug(post.slug);
+        setExcerpt(post.excerpt);
+        setContent(post.content);
+        setDate(post.date);
+        setTags(post.tags.join(", "));
+        setReady(true);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setError("게시글을 불러오지 못했습니다.");
+        setReady(true);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isEditMode, editSlug]);
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
 
-    const content = editorRef.current?.getInstance().getMarkdown() ?? "";
-    if (!content.trim()) {
+    const markdown = editorRef.current?.getInstance().getMarkdown() ?? "";
+    if (!markdown.trim()) {
       setError("내용을 입력하세요.");
       return;
     }
@@ -60,25 +97,33 @@ export default function WritePostPage() {
       .map((t) => t.trim())
       .filter(Boolean);
 
+    const body = JSON.stringify({
+      title,
+      slug,
+      excerpt,
+      date,
+      tags: tagList,
+      content: markdown,
+    });
+
     try {
-      const res = await apiFetchAuth("/api/posts", token!, {
-        method: "POST",
-        body: JSON.stringify({
-          title,
-          slug,
-          excerpt,
-          date,
-          tags: tagList,
-          content,
-        }),
-      });
+      const res = isEditMode
+        ? await apiFetchAuth(`/api/posts/${editSlug}`, token!, {
+            method: "PUT",
+            body,
+          })
+        : await apiFetchAuth("/api/posts", token!, { method: "POST", body });
 
       if (res.status === 409) {
         setError("이미 사용 중인 slug입니다.");
         return;
       }
       if (!res.ok) {
-        setError("게시글 작성에 실패했습니다.");
+        setError(
+          isEditMode
+            ? "게시글 수정에 실패했습니다."
+            : "게시글 작성에 실패했습니다."
+        );
         return;
       }
 
@@ -99,25 +144,31 @@ export default function WritePostPage() {
       <div className="fixed left-0 right-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
           <Link
-            to="/"
+            to={isEditMode ? `/posts/${editSlug}` : "/"}
             className="flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
-            홈으로
+            {isEditMode ? "포스트로" : "홈으로"}
           </Link>
 
           <span className="text-sm font-semibold text-foreground">
-            새 글 작성
+            {isEditMode ? "글 수정" : "새 글 작성"}
           </span>
 
           <button
             form="write-form"
             type="submit"
-            disabled={loading}
+            disabled={loading || !ready}
             className="flex items-center gap-1.5 rounded-lg bg-foreground px-4 py-1.5 text-xs font-medium text-background transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             <Send className="h-3.5 w-3.5" />
-            {loading ? "발행 중..." : "발행"}
+            {isEditMode
+              ? loading
+                ? "수정 중..."
+                : "수정 완료"
+              : loading
+                ? "발행 중..."
+                : "발행"}
           </button>
         </div>
       </div>
@@ -206,18 +257,27 @@ export default function WritePostPage() {
             )}
           </div>
 
-          {/* Toast UI Editor */}
+          {/* Toast UI Editor — initialValue는 마운트 시점에만 반영되므로 로딩 후 렌더 */}
           <div className="overflow-hidden rounded-xl border border-border">
-            <Editor
-              ref={editorRef}
-              initialValue=""
-              previewStyle="vertical"
-              initialEditType="markdown"
-              height="calc(100vh - 22rem)"
-              theme="dark"
-              useCommandShortcut
-              placeholder="마크다운으로 작성하세요..."
-            />
+            {ready ? (
+              <Editor
+                ref={editorRef}
+                initialValue={content}
+                previewStyle="vertical"
+                initialEditType="markdown"
+                height="calc(100vh - 22rem)"
+                theme="dark"
+                useCommandShortcut
+                placeholder="마크다운으로 작성하세요..."
+              />
+            ) : (
+              <div
+                className="flex items-center justify-center text-sm text-muted-foreground"
+                style={{ height: "calc(100vh - 22rem)" }}
+              >
+                불러오는 중…
+              </div>
+            )}
           </div>
         </form>
       </div>

@@ -17,6 +17,7 @@ function App() {
           <Route path="/posts" element={<PostsPage />} />
           <Route path="/posts/write" element={<WritePostPage />} />
           <Route path="/posts/:slug" element={<PostPage />} />
+          <Route path="/posts/:slug/edit" element={<WritePostPage />} />
           <Route path="/admin/login" element={<LoginPage />} />
         </Routes>
       </BrowserRouter>
