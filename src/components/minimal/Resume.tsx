@@ -73,11 +73,6 @@ export function Education() {
           meta="Completed, 240h+ · Dec 2025 – Feb 2026"
           right="SAP"
         />
-        <Row
-          title="Codeit Sprint — Frontend Engineer Bootcamp"
-          meta="Completed · Feb 2024 – Aug 2024"
-          right="Codeit"
-        />
       </div>
     </section>
   );

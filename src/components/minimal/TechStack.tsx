@@ -17,16 +17,32 @@ const groups: { label: string; items: string[] }[] = [
     ],
   },
   {
-    label: "Infra & Analytics",
-    items: ["AWS S3", "CloudFront", "Cognito", "GitHub Actions", "Vercel", "GA4", "Mixpanel"],
+    label: "Backend",
+    items: [
+      "Python",
+      "FastAPI",
+      "Node.js",
+      "NestJS",
+      "Java",
+      "C/C++",
+      "ABAP",
+      "MySQL",
+      "PostgreSQL",
+      "SQLite",
+    ],
   },
   {
-    label: "Languages & ERP",
-    items: ["ABAP", "Python", "Java", "C++"],
-  },
-  {
-    label: "Tools",
-    items: ["Git", "GitHub", "Turborepo", "Vite", "ESLint", "Prettier", "Figma"],
+    label: "Others",
+    items: [
+      "AWS S3",
+      "EC2",
+      "RDS",
+      "CloudFront",
+      "Git",
+      "GitHub",
+      "GitHub Actions",
+      "Figma",
+    ],
   },
 ];
 
