@@ -16,22 +16,22 @@ const urlTransform: UrlTransform = (value, key, node) => {
 
 const mdComponents: Components = {
   h2: ({ children }) => (
-    <h2 className="mb-5 mt-14 border-b border-white/[0.07] pb-3 text-[18px] font-medium tracking-[-0.01em] text-white first:mt-0">
+    <h2 className="mb-5 mt-14 break-words border-b border-white/[0.07] pb-3 text-[18px] font-medium tracking-[-0.01em] text-white first:mt-0">
       {children}
     </h2>
   ),
   h3: ({ children }) => (
-    <h3 className="mb-3 mt-10 text-[15.5px] font-medium text-white">
+    <h3 className="mb-3 mt-10 break-words text-[15.5px] font-medium text-white">
       {children}
     </h3>
   ),
   h4: ({ children }) => (
-    <h4 className="mb-2 mt-6 text-[14px] font-medium text-white/85">
+    <h4 className="mb-2 mt-6 break-words text-[14px] font-medium text-white/85">
       {children}
     </h4>
   ),
   p: ({ children }) => (
-    <p className="mb-5 text-[14.5px] leading-[1.85] text-white/60 [text-wrap:pretty]">
+    <p className="mb-5 break-words text-[14.5px] leading-[1.85] text-white/60 [text-wrap:pretty]">
       {children}
     </p>
   ),
@@ -40,7 +40,7 @@ const mdComponents: Components = {
   li: ({ children }) => (
     <li className="flex items-start gap-3 text-[14.5px] leading-[1.8] text-white/60">
       <span className="mt-[10px] h-1 w-1 flex-shrink-0 rounded-full bg-white/30" />
-      <span className="min-w-0">{children}</span>
+      <span className="min-w-0 break-words">{children}</span>
     </li>
   ),
   code: ({ children }) => {
@@ -53,14 +53,14 @@ const mdComponents: Components = {
       );
     }
     return (
-      <code className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.85em] text-foreground">
+      <code className="break-words rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.85em] text-foreground">
         {children}
       </code>
     );
   },
   pre: ({ children }) => (
-    <div className="my-7 overflow-hidden rounded-xl border border-border">
-      <pre className="overflow-x-auto bg-muted/60 p-5 text-sm leading-relaxed">
+    <div className="my-7 max-w-full overflow-hidden rounded-xl border border-border">
+      <pre className="overflow-x-auto overscroll-x-contain bg-muted/60 p-4 text-[13px] leading-relaxed sm:p-5 sm:text-sm">
         {children}
       </pre>
     </div>
@@ -75,7 +75,7 @@ const mdComponents: Components = {
     />
   ),
   blockquote: ({ children }) => (
-    <blockquote className="my-6 rounded-r-lg border-l-4 border-foreground/30 bg-muted/40 px-5 py-4 text-muted-foreground">
+    <blockquote className="my-6 break-words rounded-r-lg border-l-4 border-foreground/30 bg-muted/40 px-5 py-4 text-muted-foreground">
       {children}
     </blockquote>
   ),
@@ -87,8 +87,8 @@ const mdComponents: Components = {
     </div>
   ),
   table: ({ children }) => (
-    <div className="my-8 overflow-hidden rounded-xl border border-border">
-      <div className="overflow-x-auto">
+    <div className="my-8 max-w-full overflow-hidden rounded-xl border border-border">
+      <div className="overflow-x-auto overscroll-x-contain">
         <table className="w-full text-sm">{children}</table>
       </div>
     </div>
@@ -118,7 +118,7 @@ const mdComponents: Components = {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-foreground underline decoration-border underline-offset-2 transition-colors hover:decoration-foreground"
+      className="break-words text-foreground underline decoration-border underline-offset-2 transition-colors hover:decoration-foreground"
     >
       {children}
     </a>

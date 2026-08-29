@@ -18,7 +18,9 @@ function Shell({ children }: { children: React.ReactNode }) {
         className="min-h-screen bg-[#171717] px-6 pb-[140px] pt-16 sm:pt-24"
         style={{ animation: "clapmin-page-in .5s ease both" }}
       >
-        <div className="mx-auto flex max-w-[680px] flex-col gap-14">{children}</div>
+        <div className="mx-auto flex w-full min-w-0 max-w-[680px] flex-col gap-14">
+          {children}
+        </div>
       </div>
       <AskDock />
     </>
@@ -150,7 +152,7 @@ export default function PostPage() {
 
   return (
     <Shell>
-      <header className="flex flex-col gap-5">
+      <header className="flex min-w-0 flex-col gap-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Link to="/posts" className={backLink}>
             <ArrowLeft className="h-3.5 w-3.5" />
@@ -182,7 +184,7 @@ export default function PostPage() {
             {post.tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-full border border-white/[0.06] bg-[#2B2B2B] px-[9px] py-[3px] font-mono text-[11px] text-white/60"
+                className="max-w-full break-all rounded-full border border-white/[0.06] bg-[#2B2B2B] px-[9px] py-[3px] font-mono text-[11px] text-white/60"
               >
                 #{tag}
               </span>
@@ -190,11 +192,11 @@ export default function PostPage() {
           </div>
         )}
 
-        <h1 className="text-[22px] font-medium leading-[1.35] tracking-[-0.01em] text-white [text-wrap:pretty] sm:text-[26px]">
+        <h1 className="break-words text-[22px] font-medium leading-[1.35] tracking-[-0.01em] text-white [text-wrap:pretty] sm:text-[26px]">
           {post.title}
         </h1>
 
-        <p className="text-[13.5px] leading-[1.75] text-white/45 [text-wrap:pretty]">
+        <p className="break-words text-[13.5px] leading-[1.75] text-white/45 [text-wrap:pretty]">
           {post.excerpt}
         </p>
 
@@ -205,7 +207,7 @@ export default function PostPage() {
         </div>
       </header>
 
-      <article>
+      <article className="min-w-0 max-w-full">
         <MarkdownRenderer content={post.content} />
       </article>
 
