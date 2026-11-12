@@ -17,7 +17,7 @@ export function Experience() {
     <section>
       <h2 className="mb-[18px] text-[13.5px] font-medium text-white">Experience</h2>
       <div className="flex flex-col gap-[18px]">
-        <Row title="FullStack Engineer · Depart" meta="Full-time | Jul 2026 – Present" right="Seoul, Onsite" />
+        <Row title="FullStack Engineer · Depart" meta="Full-time | Jul 2026 – Aug 2026" right="Seoul, Onsite" />
         <Row
           title="Frontend Engineer · SSU IT Support Committee"
           meta="Sep 2024 – Aug 2026 | Frontend LEAD, Scholarship System TF"

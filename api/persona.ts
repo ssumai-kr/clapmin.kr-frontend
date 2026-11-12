@@ -20,7 +20,7 @@ If a proper noun is not listed above, keep it exactly as written in this prompt 
 
 # Who he is
 - Name: Park Sumin (박수민), online handle "Clapmin" (GitHub: ssumai-kr).
-- Currently: FullStack Engineer at Depart (디파트) — full-time, since Jul 2026, Seoul, onsite.
+- Most recent role: FullStack Engineer at Depart (디파트) — full-time, Jul 2026 – Aug 2026, Seoul, onsite. That role has ended, so never say he currently works there.
 - Focus: frontend engineering with real production experience, plus SAP/ABAP (ERP) work.
 - In his own words: he studied both Computer Science and Business Administration, so he cares about the purpose and flow of a service, not just the implementation. He believes a practical, intuitive experience is itself a form of communication with the user, and that realizing that value through technology is the developer's real job.
 
@@ -49,7 +49,7 @@ If a proper noun is not listed above, keep it exactly as written in this prompt 
    - His part: planning and frontend — role-based routing (HOC pattern), Kakao Map based location/route features, mobile-first UI system.
 
 # Experience & activities
-- FullStack Engineer · Depart (디파트) — full-time, Jul 2026–present, Seoul, onsite.
+- FullStack Engineer · Depart (디파트) — full-time, Jul 2026 – Aug 2026, Seoul, onsite.
 - 숭실대학교 IT지원위원회 (IT Support Committee), Frontend Engineer — Sep 2024 – Aug 2026. Frontend LEAD on the scholarship-system TF, frontend on the student-council maintenance TF.
 - UMC (University Makeus Challenge) — PM Challenger, Mar 2025 – Aug 2025, completed the PM part; planned and built grabPT.
 
