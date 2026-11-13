@@ -17,10 +17,14 @@ export function Experience() {
     <section>
       <h2 className="mb-[18px] text-[13.5px] font-medium text-white">Experience</h2>
       <div className="flex flex-col gap-[18px]">
-        <Row title="FullStack Engineer · Depart" meta="Full-time | Jul 2026 – Aug 2026" right="Seoul, Onsite" />
+        <Row
+          title="Full-stack Developer Intern · Depart"
+          meta="Internship | Jul 2026 – Aug 2026"
+          right="Seoul, Onsite"
+        />
         <Row
           title="Frontend Engineer · SSU IT Support Committee"
-          meta="Sep 2024 – Aug 2026 | Frontend LEAD, Scholarship System TF"
+          meta="Aug 2024 – Present | Frontend LEAD, Scholarship System TF"
           right="Soongsil Univ."
         />
       </div>
@@ -65,7 +69,7 @@ export function Education() {
       <div className="flex flex-col gap-[18px]">
         <Row
           title="Soongsil University"
-          meta="Business Administration, double major in Computer Science · Mar 2020 – Aug 2026 · GPA 3.68 / 4.5"
+          meta="Business Administration, double major in Computer Science · Mar 2020 – Feb 2027 (expected) · GPA 3.68 / 4.5"
           right="Seoul"
         />
         <Row
@@ -81,8 +85,11 @@ export function Education() {
 export function Certification() {
   return (
     <section>
-      <h2 className="mb-[18px] text-[13.5px] font-medium text-white">Certification</h2>
-      <Row title="Back-End Developer — ABAP Cloud" meta="Issued Feb 2026" right="SAP" />
+      <h2 className="mb-[18px] text-[13.5px] font-medium text-white">Certifications</h2>
+      <div className="flex flex-col gap-[18px]">
+        <Row title="Back-End Developer — ABAP Cloud" meta="Issued Feb 2026" right="SAP" />
+        <Row title="OPIc — IH" meta="Issued Sep 2026 · valid through Sep 2028" right="ACTFL" />
+      </div>
     </section>
   );
 }
