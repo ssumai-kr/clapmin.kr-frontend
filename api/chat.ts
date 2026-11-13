@@ -17,6 +17,24 @@ const MAX_TOKENS = 800;
 const MAX_HISTORY = 12; // last N turns kept
 const MAX_CHARS = 2000; // per-message cap
 
+// Prompt caching for the system prompt.
+//
+// The persona is the same bytes on every request and dwarfs the question, so
+// it is worth caching: a cache read costs ~0.1x the normal input price, a
+// write ~1.25x. Two requests that share the prefix already pay for themselves.
+//
+// ⚠️ Haiku 4.5 only caches a prefix of at least 4,096 tokens. Shorter prefixes
+// fail SILENTLY — no error, just cache_creation_input_tokens: 0 and the full
+// bill. The persona measured 5,312 tokens (count_tokens, 2026-11), so it is
+// above the floor; if it is ever trimmed back under ~4,100 tokens the caching
+// below quietly stops working. Watch the cacheRead field in the chat log.
+//
+// The default 5-minute TTL is the right one here. It covers what actually
+// repeats — one visitor asking several questions in a single visit. The 1-hour
+// TTL doubles the write premium (1.25x → 2x), and visits to a portfolio site
+// are usually hours apart, so most requests would pay the higher write and
+// never get read back.
+
 type Role = "user" | "assistant";
 interface ChatMessage {
   role: Role;
@@ -97,7 +115,14 @@ export default async function handler(request: Request): Promise<Response> {
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       let answer = "";
-      let usage: { in?: number; out?: number } | undefined;
+      let usage:
+        | {
+            in?: number;
+            out?: number;
+            cacheWrite?: number;
+            cacheRead?: number;
+          }
+        | undefined;
       try {
         const upstream = await fetch(ANTHROPIC_URL, {
           method: "POST",
@@ -109,7 +134,13 @@ export default async function handler(request: Request): Promise<Response> {
           body: JSON.stringify({
             model: MODEL,
             max_tokens: MAX_TOKENS,
-            system: SYSTEM_PROMPT,
+            system: [
+              {
+                type: "text",
+                text: SYSTEM_PROMPT,
+                cache_control: { type: "ephemeral" },
+              },
+            ],
             messages,
             stream: true,
           }),
@@ -151,7 +182,16 @@ export default async function handler(request: Request): Promise<Response> {
               answer += evt.delta.text;
               controller.enqueue(encoder.encode(evt.delta.text));
             } else if (evt.type === "message_start") {
-              usage = { ...usage, in: evt.message?.usage?.input_tokens };
+              // input_tokens counts only what was NOT served from cache, so the
+              // real prompt size is in + cacheWrite + cacheRead. A healthy
+              // cache shows cacheRead ≈ the persona and cacheWrite 0.
+              const u = evt.message?.usage;
+              usage = {
+                ...usage,
+                in: u?.input_tokens,
+                cacheWrite: u?.cache_creation_input_tokens,
+                cacheRead: u?.cache_read_input_tokens,
+              };
             } else if (evt.type === "message_delta") {
               usage = { ...usage, out: evt.usage?.output_tokens };
             } else if (evt.type === "error") {
