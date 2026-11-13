@@ -16,7 +16,7 @@ export const projects: Project[] = [
     description:
       "Integrated Special Scholarship Platform of Soongsil University",
     tags: [],
-    liveUrl: "https://ssuport.kr/",
+    liveUrl: "https://ssuport.ssu.ac.kr/",
     imageUrl: "/project1.svg",
     imageContain: true,
   },
