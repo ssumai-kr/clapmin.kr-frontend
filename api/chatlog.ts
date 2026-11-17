@@ -24,7 +24,17 @@ export interface ChatLogEntry {
   sid: string;
   q: string;
   a: string;
-  tokens?: { in?: number; out?: number };
+  /**
+   * in = uncached input, cacheWrite = tokens written to the prompt cache,
+   * cacheRead = tokens served from it. Prompt size is in + cacheWrite +
+   * cacheRead; cacheRead staying 0 means the cache is not working.
+   */
+  tokens?: {
+    in?: number;
+    out?: number;
+    cacheWrite?: number;
+    cacheRead?: number;
+  };
 }
 
 const hasUpstash =
